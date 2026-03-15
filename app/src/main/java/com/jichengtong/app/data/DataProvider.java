@@ -195,6 +195,29 @@ public class DataProvider {
         return glossary;
     }
 
+    public GlossaryItem getGlossaryByTerm(String term) {
+        for (GlossaryItem g : getGlossary()) {
+            if (g.getTerm().equals(term)) return g;
+        }
+        return null;
+    }
+
+    public List<GlossaryItem> getGlossaryByCategory(String category) {
+        List<GlossaryItem> result = new ArrayList<>();
+        for (GlossaryItem g : getGlossary()) {
+            if (category == null || category.equals(g.getCategory())) result.add(g);
+        }
+        return result;
+    }
+
+    public List<GlossaryItem> getGlossaryByDifficulty(String difficulty) {
+        List<GlossaryItem> result = new ArrayList<>();
+        for (GlossaryItem g : getGlossary()) {
+            if (difficulty.equals(g.getDifficulty())) result.add(g);
+        }
+        return result;
+    }
+
     // Search across all content
     public List<Object> search(String query) {
         List<Object> results = new ArrayList<>();
@@ -242,7 +265,9 @@ public class DataProvider {
         // Search glossary
         for (GlossaryItem g : getGlossary()) {
             if (g.getTerm().toLowerCase().contains(q) ||
-                g.getDefinition().toLowerCase().contains(q)) {
+                g.getDefinition().toLowerCase().contains(q) ||
+                g.getExample().toLowerCase().contains(q) ||
+                g.getCategory().toLowerCase().contains(q)) {
                 results.add(g);
             }
         }

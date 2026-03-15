@@ -5,20 +5,27 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.graphics.Typeface;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.jichengtong.app.R;
 import com.jichengtong.app.data.DataProvider;
+import com.jichengtong.app.models.GlossaryItem;
 import com.jichengtong.app.models.LawArticle;
 import com.jichengtong.app.utils.FavoritesManager;
+import com.jichengtong.app.utils.GlossaryHelper;
 import java.util.List;
 
 public class LawDetailActivity extends AppCompatActivity {
@@ -48,12 +55,19 @@ public class LawDetailActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.law_title)).setText(law.getTitle());
 
         List<String> keywords = law.getKeywords();
-        ((TextView) findViewById(R.id.plain_explanation)).setText(highlightKeywords(law.getPlainExplanation(), keywords));
-        ((TextView) findViewById(R.id.life_example)).setText(highlightKeywords(law.getLifeExample(), keywords));
+        TextView plainTv = findViewById(R.id.plain_explanation);
+        plainTv.setText(highlightWithGlossary(law.getPlainExplanation(), keywords));
+        plainTv.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextView lifeTv = findViewById(R.id.life_example);
+        lifeTv.setText(highlightWithGlossary(law.getLifeExample(), keywords));
+        lifeTv.setMovementMethod(LinkMovementMethod.getInstance());
 
         String lawRef = "《民法典》" + law.getArticle();
         String originalWithRef = lawRef + "\n" + law.getOriginalText();
-        ((TextView) findViewById(R.id.original_text)).setText(highlightKeywords(originalWithRef, keywords));
+        TextView origTv = findViewById(R.id.original_text);
+        origTv.setText(highlightWithGlossary(originalWithRef, keywords));
+        origTv.setMovementMethod(LinkMovementMethod.getInstance());
 
         findViewById(R.id.btn_view_official).setOnClickListener(v -> {
             Intent webIntent = new Intent(this, WebViewActivity.class);
@@ -139,6 +153,32 @@ public class LawDetailActivity extends AppCompatActivity {
             "</a>" +
             "<div class='footer'>本页内容摘自全国人民代表大会官方发布的《中华人民共和国民法典》<br/>仅供参考，以官方发布为准</div>" +
             "</body></html>";
+    }
+
+    private SpannableStringBuilder highlightWithGlossary(String text, List<String> keywords) {
+        SpannableStringBuilder sb = highlightKeywords(text, keywords);
+        DataProvider dp = DataProvider.getInstance(this);
+        for (GlossaryItem g : dp.getGlossary()) {
+            if (g.getTerm().length() < 2) continue;
+            if (!"hard".equals(g.getDifficulty()) && !"medium".equals(g.getDifficulty())) continue;
+            String term = g.getTerm();
+            String str = sb.toString();
+            int idx = str.indexOf(term);
+            while (idx >= 0) {
+                final GlossaryItem item = g;
+                sb.setSpan(new ClickableSpan() {
+                    @Override public void onClick(@NonNull View w) {
+                        GlossaryHelper.showTermDialog(LawDetailActivity.this, item);
+                    }
+                    @Override public void updateDrawState(@NonNull TextPaint ds) {
+                        ds.setColor(0xFF6A1B9A);
+                        ds.setUnderlineText(true);
+                    }
+                }, idx, idx + term.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                idx = str.indexOf(term, idx + term.length());
+            }
+        }
+        return sb;
     }
 
     private SpannableStringBuilder highlightKeywords(String text, List<String> keywords) {

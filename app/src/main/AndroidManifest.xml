@@ -28,5 +28,6 @@
         <activity android:name=".activities.HistoryActivity" android:parentActivityName=".activities.MainActivity" />
         <activity android:name=".activities.AIActivity" android:parentActivityName=".activities.MainActivity" />
         <activity android:name=".activities.WebViewActivity" android:parentActivityName=".activities.MainActivity" />
+        <activity android:name=".activities.GlossaryActivity" android:parentActivityName=".activities.MainActivity" />
     </application>
 </manifest>

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.jichengtong.app.R;
+import com.jichengtong.app.activities.GlossaryActivity;
 import com.jichengtong.app.activities.ToolsDetailActivity;
 import com.jichengtong.app.adapters.ToolAdapter;
 import com.jichengtong.app.data.DataProvider;
@@ -27,6 +28,9 @@ public class ToolsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DataProvider data = DataProvider.getInstance(requireContext());
+
+        view.findViewById(R.id.glossary_card).setOnClickListener(v ->
+            startActivity(new Intent(requireContext(), GlossaryActivity.class)));
 
         RecyclerView rv = view.findViewById(R.id.tools_rv);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));

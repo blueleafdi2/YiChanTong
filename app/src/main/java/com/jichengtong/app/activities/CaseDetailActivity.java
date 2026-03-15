@@ -22,8 +22,10 @@ import com.google.android.material.chip.ChipGroup;
 import com.jichengtong.app.R;
 import com.jichengtong.app.data.DataProvider;
 import com.jichengtong.app.models.CourtCase;
+import com.jichengtong.app.models.GlossaryItem;
 import com.jichengtong.app.models.LawArticle;
 import com.jichengtong.app.utils.FavoritesManager;
+import com.jichengtong.app.utils.GlossaryHelper;
 import com.jichengtong.app.utils.LawLinkHelper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,8 +71,14 @@ public class CaseDetailActivity extends AppCompatActivity {
                 chip.setChipBackgroundColorResource(R.color.primary_container);
                 chip.setChipStrokeColorResource(R.color.primary);
                 chip.setChipStrokeWidth(1f);
-                chip.setClickable(false);
+                GlossaryItem gi = GlossaryHelper.findTerm(this, tag);
+                chip.setClickable(gi != null);
                 chip.setCheckable(false);
+                if (gi != null) {
+                    chip.setChipIconResource(R.drawable.ic_help);
+                    chip.setChipIconTintResource(R.color.primary);
+                    chip.setOnClickListener(v -> GlossaryHelper.showTermDialog(this, gi));
+                }
                 chip.setEnsureMinTouchTargetSize(false);
                 chip.setChipMinHeight(0);
                 tagsContainer.addView(chip);

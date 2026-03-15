@@ -17,6 +17,7 @@ import com.google.android.material.button.MaterialButton;
 import com.jichengtong.app.R;
 import com.jichengtong.app.data.DataProvider;
 import com.jichengtong.app.models.*;
+import com.jichengtong.app.utils.GlossaryHelper;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,12 +70,7 @@ public class SearchActivity extends AppCompatActivity {
                 intent.putExtra("tool_id", ((ToolItem) item).getId());
                 startActivity(intent);
             } else if (item instanceof GlossaryItem) {
-                GlossaryItem g = (GlossaryItem) item;
-                new android.app.AlertDialog.Builder(this)
-                    .setTitle("📖 " + g.getTerm())
-                    .setMessage(g.getDefinition() + "\n\n相关法条：" + g.getRelatedLaw())
-                    .setPositiveButton("确定", null)
-                    .show();
+                GlossaryHelper.showTermDialog(this, (GlossaryItem) item);
             }
         });
         rv.setAdapter(adapter);
@@ -162,9 +158,10 @@ public class SearchActivity extends AppCompatActivity {
                 holder.summary.setText(t.getDescription());
             } else if (item instanceof GlossaryItem) {
                 GlossaryItem g = (GlossaryItem) item;
-                holder.typeBadge.setText("术语");
-                holder.typeBadge.setBackgroundColor(0xFF5D4037);
-                holder.title.setText(g.getTerm());
+                String diffEmoji = "hard".equals(g.getDifficulty()) ? "⚠️" : "medium".equals(g.getDifficulty()) ? "📝" : "✅";
+                holder.typeBadge.setText(diffEmoji + " 术语");
+                holder.typeBadge.setBackgroundColor("hard".equals(g.getDifficulty()) ? 0xFFC62828 : 0xFF5D4037);
+                holder.title.setText(g.getTerm() + "  [" + g.getCategory() + "]");
                 String def = g.getDefinition();
                 holder.summary.setText(def != null ? def.substring(0, Math.min(80, def.length())) + "..." : "");
             }
