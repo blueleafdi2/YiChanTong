@@ -40,3 +40,9 @@ local.properties
 
 # Release APKs in root
 app-release-aligned.apk
+
+# APK signatures
+*.idsig
+
+# Screenshots (not needed in repo)
+screenshot_*.png
