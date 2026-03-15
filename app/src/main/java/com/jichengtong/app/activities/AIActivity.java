@@ -284,6 +284,9 @@ public class AIActivity extends AppCompatActivity {
             StringBuilder fullResponse = new StringBuilder();
             String line;
             long lastUIUpdate = 0;
+            boolean needsScroll = true;
+
+            messages.get(msgIdx).isStreaming = true;
 
             while ((line = reader.readLine()) != null) {
                 if (!line.startsWith("data: ")) continue;
@@ -301,20 +304,30 @@ public class AIActivity extends AppCompatActivity {
                     fullResponse.append(content);
 
                     long now = System.currentTimeMillis();
-                    if (now - lastUIUpdate > 80) {
+                    if (now - lastUIUpdate > 120) {
                         lastUIUpdate = now;
                         final String current = fullResponse.toString();
+                        final boolean doScroll = needsScroll;
                         mainHandler.post(() -> {
                             messages.get(msgIdx).content = current;
-                            adapter.notifyItemChanged(msgIdx);
-                            scrollToBottom();
+                            RecyclerView.ViewHolder vh =
+                                chatRv.findViewHolderForAdapterPosition(msgIdx);
+                            if (vh instanceof ChatAdapter.VH) {
+                                ((ChatAdapter.VH) vh).content.setText(current);
+                            }
+                            if (doScroll) {
+                                chatRv.scrollToPosition(msgIdx);
+                            }
                         });
+                        needsScroll = fullResponse.length() % 200 < 20;
                     }
                 } catch (Exception ignored) {}
             }
             reader.close();
 
+            messages.get(msgIdx).isStreaming = false;
             final String finalResponse = fullResponse.toString();
+
             mainHandler.post(() -> {
                 messages.get(msgIdx).content = finalResponse;
                 adapter.notifyItemChanged(msgIdx);
@@ -334,6 +347,7 @@ public class AIActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             mainHandler.post(() -> {
+                messages.get(msgIdx).isStreaming = false;
                 messages.get(msgIdx).content =
                     "网络连接失败，请检查网络后重试。\n\n您也可以：\n• 使用App内的法律库查询法条\n• 在案例库搜索相关判例\n• 拨打12348免费法律热线";
                 adapter.notifyItemChanged(msgIdx);
@@ -425,6 +439,7 @@ public class AIActivity extends AppCompatActivity {
         String role;
         String content;
         List<RelatedItem> relatedItems;
+        boolean isStreaming;
         ChatMessage(String role, String content) {
             this.role = role;
             this.content = content;
@@ -459,6 +474,9 @@ public class AIActivity extends AppCompatActivity {
             holder.role.setGravity(isUser ? Gravity.END : Gravity.START);
 
             if (isUser) {
+                holder.content.setText(msg.content);
+                holder.content.setMovementMethod(null);
+            } else if (msg.isStreaming) {
                 holder.content.setText(msg.content);
                 holder.content.setMovementMethod(null);
             } else {
