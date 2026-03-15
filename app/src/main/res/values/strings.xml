@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">遗产通</string>
+    <string name="tab_home">首页</string>
+    <string name="tab_laws">法律库</string>
+    <string name="tab_cases">案例库</string>
+    <string name="tab_tools">工具箱</string>
+    <string name="tab_mine">我的</string>
+    <string name="search_hint">搜索法条、案例、关键词…</string>
+    <string name="quick_start">快速了解</string>
+    <string name="quick_start_desc">请选择您关心的场景</string>
+    <string name="today_case">今日案例</string>
+    <string name="hot_questions">热门问题</string>
+    <string name="law_detail">法条详情</string>
+    <string name="case_detail">案例详情</string>
+    <string name="plain_explanation">白话解读</string>
+    <string name="illustration">图解说明</string>
+    <string name="life_example">生活案例</string>
+    <string name="original_text">法条原文</string>
+    <string name="related_interpretations">关联司法解释</string>
+    <string name="related_cases">关联案例</string>
+    <string name="legislative_history">立法沿革</string>
+    <string name="collect">收藏</string>
+    <string name="note">笔记</string>
+    <string name="share">分享</string>
+    <string name="contact_expert">联系法律专家</string>
+    <string name="disclaimer">⚠️ 本App内容仅供参考学习，不构成专业法律意见。具体法律问题请咨询执业律师。</string>
+    <string name="case_info">案件信息</string>
+    <string name="case_summary">案情摘要</string>
+    <string name="judgment_result">裁判结果</string>
+    <string name="legal_basis">法律依据</string>
+    <string name="ruling_gist">裁判要旨</string>
+    <string name="all_topics">全部专题</string>
+    <string name="favorites">我的收藏</string>
+    <string name="my_notes">我的笔记</string>
+    <string name="reading_history">阅读历史</string>
+    <string name="about">关于</string>
+    <string name="content_updated_to">内容更新至2024年12月</string>
+</resources>

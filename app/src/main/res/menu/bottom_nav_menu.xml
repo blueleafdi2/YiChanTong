@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/tab_home" />
+    <item
+        android:id="@+id/nav_laws"
+        android:icon="@drawable/ic_laws"
+        android:title="@string/tab_laws" />
+    <item
+        android:id="@+id/nav_cases"
+        android:icon="@drawable/ic_cases"
+        android:title="@string/tab_cases" />
+    <item
+        android:id="@+id/nav_tools"
+        android:icon="@drawable/ic_tools"
+        android:title="@string/tab_tools" />
+    <item
+        android:id="@+id/nav_mine"
+        android:icon="@drawable/ic_mine"
+        android:title="@string/tab_mine" />
+</menu>
