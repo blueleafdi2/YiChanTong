@@ -31,5 +31,11 @@ public class MineFragment extends Fragment {
                 startActivity(new Intent(requireContext(), ContactActivity.class)));
         view.findViewById(R.id.ai_card).setOnClickListener(v ->
                 startActivity(new Intent(requireContext(), AIActivity.class)));
+        view.findViewById(R.id.btn_privacy_policy).setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), WebViewActivity.class);
+            intent.putExtra("url", "https://blueleafdi2.github.io/YiChanTong/privacy-policy.html");
+            intent.putExtra("title", "隐私政策");
+            startActivity(intent);
+        });
     }
 }
