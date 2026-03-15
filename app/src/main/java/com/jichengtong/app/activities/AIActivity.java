@@ -194,9 +194,19 @@ public class AIActivity extends AppCompatActivity {
                         .getJSONObject("message")
                         .getString("content");
             } else if (code == 401) {
-                return "API Key 无效或已过期，请重新配置。\n\n访问 platform.deepseek.com 获取新的 API Key。";
+                return "API Key 无效或已过期。\n\n请联系开发者更新 API Key。";
+            } else if (code == 402) {
+                return "AI 服务账户余额不足，暂时无法使用。\n\n" +
+                    "开发者正在处理中，请稍后重试。\n\n" +
+                    "您也可以直接使用 App 内的丰富资源：\n" +
+                    "• 📚 法律库：45条继承法条逐条解读\n" +
+                    "• 📋 案例库：210+全国真实判例\n" +
+                    "• 💡 知识专题：20+继承法常见场景\n" +
+                    "• 🔥 热门问题：30+高频法律疑问\n\n" +
+                    "如需人工咨询，请前往「我的 → 联系法律专家」";
             } else {
-                return "AI服务暂时不可用（错误码" + code + "）。\n\n请稍后重试，或直接使用App内的法律库和案例库查询。";
+                return "AI 服务暂时不可用（错误码 " + code + "）。\n\n" +
+                    "请稍后重试。您也可以直接使用 App 内的法律库和案例库查询。";
             }
         } catch (Exception e) {
             return "网络连接失败，请检查网络后重试。\n\n您也可以：\n• 使用App内的法律库查询法条\n• 在案例库搜索相关判例\n• 拨打12348免费法律热线";

@@ -20,13 +20,19 @@ import com.jichengtong.app.adapters.QuestionAdapter;
 import com.jichengtong.app.adapters.TopicAdapter;
 import com.jichengtong.app.data.DataProvider;
 import com.jichengtong.app.models.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 public class HomeFragment extends Fragment {
 
-    @Nullable
-    @Override
+    private static final String[] PAIN_POINT_FAQ_ORDER = {
+        "faq_01", "faq_07", "faq_03", "faq_06",
+        "faq_02", "faq_12", "faq_04", "faq_08"
+    };
+
+    @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -36,34 +42,27 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         DataProvider data = DataProvider.getInstance(requireContext());
 
-        // Search bar
-        view.findViewById(R.id.search_bar).setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), SearchActivity.class));
-        });
+        view.findViewById(R.id.search_bar).setOnClickListener(v ->
+            startActivity(new Intent(requireContext(), SearchActivity.class)));
 
-        // Scenario chips
         setupScenarioChips(view);
 
-        // AI entry card
-        view.findViewById(R.id.ai_entry_card).setOnClickListener(v -> {
-            startActivity(new Intent(requireContext(), AIActivity.class));
-        });
+        view.findViewById(R.id.ai_entry_card).setOnClickListener(v ->
+            startActivity(new Intent(requireContext(), AIActivity.class)));
 
-        // Today's case
-        setupTodayCase(view, data);
-
-        // Hot questions
+        setupFeaturedCase(view, data);
         setupHotQuestions(view, data);
-
-        // Topics
         setupTopics(view, data);
     }
 
     private void setupScenarioChips(View view) {
         ChipGroup chipGroup = view.findViewById(R.id.scenario_chips);
-        String[] scenarios = {"亲人去世了怎么办", "我想提前立遗嘱", "对遗产分配有争议",
-                "了解继承法知识", "房产如何继承", "债务要继承吗"};
-        String[] topicIds = {"topic_01", "topic_02", "topic_01", "topic_04", "topic_10", "topic_09"};
+        String[] scenarios = {
+            "亲人去世后遗产怎么分", "我想立一份有效遗嘱",
+            "遗产分配有争议怎么办", "房产继承过户流程",
+            "父母的债务要子女还吗", "数字遗产怎么继承"
+        };
+        String[] topicIds = {"topic_01", "topic_02", "topic_01", "topic_10", "topic_09", "topic_11"};
 
         for (int i = 0; i < scenarios.length; i++) {
             Chip chip = new Chip(requireContext());
@@ -81,26 +80,33 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void setupTodayCase(View view, DataProvider data) {
+    private void setupFeaturedCase(View view, DataProvider data) {
         List<CourtCase> cases = data.getCourtCases();
         if (cases.isEmpty()) return;
 
-        int index = new Random().nextInt(cases.size());
-        CourtCase todayCase = cases.get(index);
+        int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        List<CourtCase> complexCases = new ArrayList<>();
+        for (CourtCase c : cases) {
+            if (c.getTags() != null && c.getTags().size() >= 4) {
+                complexCases.add(c);
+            }
+        }
+        List<CourtCase> pool = complexCases.isEmpty() ? cases : complexCases;
+        CourtCase featured = pool.get(dayOfYear % pool.size());
 
         TextView title = view.findViewById(R.id.today_case_title);
         TextView court = view.findViewById(R.id.today_case_court);
         TextView date = view.findViewById(R.id.today_case_date);
         LinearLayout tagsLayout = view.findViewById(R.id.today_case_tags);
 
-        title.setText(todayCase.getTitle());
-        court.setText(todayCase.getCourt());
-        date.setText(todayCase.getJudgeDate());
+        title.setText(featured.getTitle());
+        court.setText(featured.getCourt());
+        date.setText(featured.getJudgeDate());
 
-        if (todayCase.getTags() != null) {
-            for (int i = 0; i < Math.min(todayCase.getTags().size(), 3); i++) {
+        if (featured.getTags() != null) {
+            for (int i = 0; i < Math.min(featured.getTags().size(), 4); i++) {
                 TextView tag = new TextView(requireContext());
-                tag.setText("#" + todayCase.getTags().get(i));
+                tag.setText("#" + featured.getTags().get(i));
                 tag.setTextSize(11);
                 tag.setTextColor(0xFF0D47A1);
                 tag.setBackgroundResource(R.drawable.bg_tag);
@@ -115,7 +121,7 @@ public class HomeFragment extends Fragment {
 
         view.findViewById(R.id.today_case_card).setOnClickListener(v -> {
             Intent intent = new Intent(requireContext(), CaseDetailActivity.class);
-            intent.putExtra("case_id", todayCase.getId());
+            intent.putExtra("case_id", featured.getId());
             startActivity(intent);
         });
     }
@@ -124,8 +130,20 @@ public class HomeFragment extends Fragment {
         RecyclerView rv = view.findViewById(R.id.hot_questions_rv);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         QuestionAdapter adapter = new QuestionAdapter();
-        List<FAQ> faqs = data.getFAQs();
-        adapter.setItems(faqs.subList(0, Math.min(8, faqs.size())));
+
+        List<FAQ> allFaqs = data.getFAQs();
+        List<String> order = Arrays.asList(PAIN_POINT_FAQ_ORDER);
+        List<FAQ> orderedFaqs = new ArrayList<>();
+        for (String id : order) {
+            for (FAQ faq : allFaqs) {
+                if (faq.getId().equals(id)) {
+                    orderedFaqs.add(faq);
+                    break;
+                }
+            }
+        }
+
+        adapter.setItems(orderedFaqs);
         adapter.setOnItemClickListener(faq -> {
             Intent intent = new Intent(requireContext(), TopicDetailActivity.class);
             intent.putExtra("faq_id", faq.getId());
@@ -139,7 +157,7 @@ public class HomeFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         TopicAdapter adapter = new TopicAdapter();
         List<Topic> topics = data.getTopics();
-        adapter.setItems(topics.subList(0, Math.min(6, topics.size())));
+        adapter.setItems(topics.subList(0, Math.min(8, topics.size())));
         adapter.setOnItemClickListener(topic -> {
             Intent intent = new Intent(requireContext(), TopicDetailActivity.class);
             intent.putExtra("topic_id", topic.getId());

@@ -52,14 +52,13 @@ public class LawDetailActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.life_example)).setText(highlightKeywords(law.getLifeExample(), keywords));
 
         String lawRef = "《民法典》" + law.getArticle();
-        String originalWithRef = lawRef + "\n\n" + law.getOriginalText();
+        String originalWithRef = lawRef + "\n" + law.getOriginalText();
         ((TextView) findViewById(R.id.original_text)).setText(highlightKeywords(originalWithRef, keywords));
 
         findViewById(R.id.btn_view_official).setOnClickListener(v -> {
-            String officialUrl = "https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE3NTJiN2Q0MzAxNzVlNDc2NmJhYjA5Zjk%3D";
             Intent webIntent = new Intent(this, WebViewActivity.class);
-            webIntent.putExtra("url", officialUrl);
-            webIntent.putExtra("title", "《民法典》官方原文 - " + law.getArticle());
+            webIntent.putExtra("html_content", generateOfficialHtml(law));
+            webIntent.putExtra("title", "《民法典》" + law.getArticle() + " 官方原文");
             startActivity(webIntent);
         });
 
@@ -106,6 +105,40 @@ public class LawDetailActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("取消", null)
                 .show();
+    }
+
+    private String generateOfficialHtml(LawArticle law) {
+        String escapedText = law.getOriginalText().replace("\n", "<br/>");
+        return "<!DOCTYPE html><html><head><meta charset='utf-8'>" +
+            "<meta name='viewport' content='width=device-width,initial-scale=1'>" +
+            "<style>" +
+            "body{font-family:-apple-system,sans-serif;margin:0;padding:16px;background:#FFFDE7;color:#212121;}" +
+            ".source{background:#1B5E20;color:white;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.6;}" +
+            ".source a{color:#FFD54F;text-decoration:underline;}" +
+            ".article-box{background:white;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}" +
+            ".article-num{font-size:18px;font-weight:bold;color:#1B5E20;margin-bottom:12px;border-bottom:2px solid #1B5E20;padding-bottom:8px;}" +
+            ".article-title{font-size:15px;color:#666;margin-bottom:16px;}" +
+            ".article-text{font-size:17px;line-height:2;color:#333;text-align:justify;}" +
+            ".verify-btn{display:block;text-align:center;background:#1B5E20;color:white;padding:14px;border-radius:8px;margin-top:20px;text-decoration:none;font-size:15px;font-weight:bold;}" +
+            ".footer{text-align:center;color:#999;font-size:12px;margin-top:20px;line-height:1.6;}" +
+            "</style></head><body>" +
+            "<div class='source'>" +
+            "<strong>📜 来源</strong><br/>" +
+            "《中华人民共和国民法典》第六编 继承<br/>" +
+            "2020年5月28日第十三届全国人民代表大会第三次会议通过<br/>" +
+            "2021年1月1日起施行<br/>" +
+            "<a href='https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE3NTJiN2Q0MzAxNzVlNDc2NmJhYjA5Zjk%3D'>国家法律法规数据库 ›</a>" +
+            "</div>" +
+            "<div class='article-box'>" +
+            "<div class='article-num'>《民法典》" + law.getArticle() + "</div>" +
+            "<div class='article-title'>" + law.getTitle() + " | " + law.getChapter() + "</div>" +
+            "<div class='article-text'>" + escapedText + "</div>" +
+            "</div>" +
+            "<a class='verify-btn' href='https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE3NTJiN2Q0MzAxNzVlNDc2NmJhYjA5Zjk%3D'>" +
+            "在国家法律法规数据库查看完整法律全文 ›" +
+            "</a>" +
+            "<div class='footer'>本页内容摘自全国人民代表大会官方发布的《中华人民共和国民法典》<br/>仅供参考，以官方发布为准</div>" +
+            "</body></html>";
     }
 
     private SpannableStringBuilder highlightKeywords(String text, List<String> keywords) {

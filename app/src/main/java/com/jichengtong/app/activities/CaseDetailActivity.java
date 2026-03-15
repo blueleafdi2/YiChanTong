@@ -22,6 +22,7 @@ import com.jichengtong.app.data.DataProvider;
 import com.jichengtong.app.models.CourtCase;
 import com.jichengtong.app.models.LawArticle;
 import com.jichengtong.app.utils.FavoritesManager;
+import com.jichengtong.app.utils.LawLinkHelper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,45 +76,9 @@ public class CaseDetailActivity extends AppCompatActivity {
 
         TextView legalBasisTv = findViewById(R.id.case_legal_basis);
         if (courtCase.getLegalBasis() != null && !courtCase.getLegalBasis().isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (String basis : courtCase.getLegalBasis()) {
-                sb.append("• ").append(basis).append("\n");
-            }
-            String basisText = sb.toString().trim();
-            SpannableString ss = new SpannableString(basisText);
-            Pattern p = Pattern.compile("第[一二三四五六七八九十百千零\\d]+条");
-            Matcher m = p.matcher(basisText);
-            while (m.find()) {
-                int start = m.start();
-                int end = m.end();
-                String matched = m.group();
-                String articleId = chineseToArticleId(matched);
-                if (articleId != null) {
-                    final String fId = articleId;
-                    ss.setSpan(new ClickableSpan() {
-                        @Override public void onClick(@NonNull View w) {
-                            LawArticle law = DataProvider.getInstance(CaseDetailActivity.this).getLawArticleById(fId);
-                            if (law != null) {
-                                Intent li = new Intent(CaseDetailActivity.this, LawDetailActivity.class);
-                                li.putExtra("law_id", fId);
-                                startActivity(li);
-                            } else {
-                                Intent wi = new Intent(CaseDetailActivity.this, WebViewActivity.class);
-                                wi.putExtra("url", "https://flk.npc.gov.cn/detail2.html?ZmY4MDgxODE3NTJiN2Q0MzAxNzVlNDc2NmJhYjA5Zjk%3D");
-                                wi.putExtra("title", "《民法典》官方原文");
-                                startActivity(wi);
-                            }
-                        }
-                        @Override public void updateDrawState(@NonNull TextPaint ds) {
-                            ds.setColor(0xFF1565C0);
-                            ds.setUnderlineText(true);
-                            ds.setFakeBoldText(true);
-                        }
-                    }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            }
-            legalBasisTv.setText(ss);
-            legalBasisTv.setMovementMethod(LinkMovementMethod.getInstance());
+            DataProvider dp = DataProvider.getInstance(this);
+            legalBasisTv.setText(LawLinkHelper.linkifyLawList(this, courtCase.getLegalBasis(), dp));
+            LawLinkHelper.enableLinkClicks(legalBasisTv);
         }
         ((TextView) findViewById(R.id.case_ruling_gist)).setText(courtCase.getRulingGist());
         ((TextView) findViewById(R.id.case_source)).setText("来源：" + courtCase.getSource());
