@@ -32,8 +32,8 @@ public final class LawLinkHelper {
 
     private static final int LINK_COLOR = 0xFF1B5E20; // #1B5E20 dark green
 
-    // Pattern 1: 《民法典》第(\d+)条 (Arabic numerals)
-    private static final Pattern PATTERN_ARABIC = Pattern.compile("《民法典》第(\\d+)条");
+    // Pattern 1: optional 《民法典》prefix + 第NNN条 (3-4 digit Arabic numerals)
+    private static final Pattern PATTERN_ARABIC = Pattern.compile("(?:《?民法典》?)?第(\\d{3,4})条");
 
     // Pattern 2: 第(一千[一二三四五六七八九零百十]+)条 (Chinese numerals)
     private static final Pattern PATTERN_CHINESE = Pattern.compile("第(一千[一二三四五六七八九零百十]+)条");

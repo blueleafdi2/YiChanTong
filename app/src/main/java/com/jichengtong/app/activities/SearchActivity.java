@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +49,17 @@ public class SearchActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, TopicDetailActivity.class);
                 intent.putExtra("topic_id", ((Topic) item).getId());
                 startActivity(intent);
+            } else if (item instanceof ToolItem) {
+                Intent intent = new Intent(this, ToolsDetailActivity.class);
+                intent.putExtra("tool_id", ((ToolItem) item).getId());
+                startActivity(intent);
+            } else if (item instanceof GlossaryItem) {
+                GlossaryItem g = (GlossaryItem) item;
+                new android.app.AlertDialog.Builder(this)
+                    .setTitle("📖 " + g.getTerm())
+                    .setMessage(g.getDefinition() + "\n\n相关法条：" + g.getRelatedLaw())
+                    .setPositiveButton("确定", null)
+                    .show();
             }
         });
         rv.setAdapter(adapter);
@@ -62,7 +74,14 @@ public class SearchActivity extends AppCompatActivity {
                 adapter.setItems(data.search(query));
             }
         });
+
         searchInput.requestFocus();
+        searchInput.postDelayed(() -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(searchInput, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 200);
     }
 
     static class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.VH> {
@@ -105,6 +124,19 @@ public class SearchActivity extends AppCompatActivity {
                 holder.typeBadge.setBackgroundColor(0xFF6A1B9A);
                 holder.title.setText(t.getTitle());
                 holder.summary.setText(t.getDescription());
+            } else if (item instanceof ToolItem) {
+                ToolItem t = (ToolItem) item;
+                holder.typeBadge.setText("工具");
+                holder.typeBadge.setBackgroundColor(0xFF00695C);
+                holder.title.setText(t.getIcon() + " " + t.getTitle());
+                holder.summary.setText(t.getDescription());
+            } else if (item instanceof GlossaryItem) {
+                GlossaryItem g = (GlossaryItem) item;
+                holder.typeBadge.setText("术语");
+                holder.typeBadge.setBackgroundColor(0xFF5D4037);
+                holder.title.setText(g.getTerm());
+                String def = g.getDefinition();
+                holder.summary.setText(def != null ? def.substring(0, Math.min(80, def.length())) + "..." : "");
             }
             holder.itemView.setOnClickListener(v -> onClick.onClick(item));
         }

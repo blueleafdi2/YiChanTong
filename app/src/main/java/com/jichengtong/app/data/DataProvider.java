@@ -230,6 +230,23 @@ public class DataProvider {
             }
         }
 
+        // Search tools
+        for (ToolItem t : getTools()) {
+            if (t.getTitle().toLowerCase().contains(q) ||
+                t.getDescription().toLowerCase().contains(q) ||
+                t.getContent().toLowerCase().contains(q)) {
+                results.add(t);
+            }
+        }
+
+        // Search glossary
+        for (GlossaryItem g : getGlossary()) {
+            if (g.getTerm().toLowerCase().contains(q) ||
+                g.getDefinition().toLowerCase().contains(q)) {
+                results.add(g);
+            }
+        }
+
         return results;
     }
 

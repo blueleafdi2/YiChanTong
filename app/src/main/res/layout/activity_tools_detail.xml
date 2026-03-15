@@ -38,6 +38,18 @@
                 android:textStyle="bold"
                 android:textColor="@color/text_primary" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_export_word"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="📄 导出Word文档"
+                android:textSize="13sp"
+                app:icon="@drawable/ic_arrow_right"
+                app:iconGravity="end"
+                app:cornerRadius="20dp"
+                style="@style/Widget.Material3.Button.TonalButton" />
+
             <TextView
                 android:id="@+id/tool_content"
                 android:layout_width="match_parent"

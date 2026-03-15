@@ -2,7 +2,7 @@ package com.jichengtong.app.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -14,12 +14,16 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,13 +62,27 @@ public class AIActivity extends AppCompatActivity {
             "5. 每次回答结尾提醒：具体问题建议咨询执业律师\n" +
             "6. 保持专业但亲切的语气，回答控制在500字以内";
 
+    private static final String PREFS_NAME = "ai_chat_prefs";
+    private static final String KEY_MESSAGES = "chat_messages";
+    private static final int MAX_SAVED_MESSAGES = 100;
+
     private final List<ChatMessage> messages = new ArrayList<>();
     private ChatAdapter adapter;
     private EditText inputMessage;
     private View btnSend;
     private DataProvider dataProvider;
+    private RecyclerView chatRv;
 
     private static final String API_KEY = "sk-fcd3d027f43b4113bee5ab9b9c3551c0";
+
+    private static final String WELCOME_MESSAGE =
+            "您好！我是遗产通AI法律助手（DeepSeek驱动），专精中国遗产继承法律。\n\n" +
+            "您可以问我任何继承相关问题，例如：\n" +
+            "• 父母去世后房产怎么继承？\n" +
+            "• 自书遗嘱需要什么条件才有效？\n" +
+            "• 独生子女能继承全部遗产吗？\n" +
+            "• 数字资产（加密货币）能继承吗？\n\n" +
+            "我的回答会关联App内的法条和案例，点击即可查看详情。";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +96,16 @@ public class AIActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_right);
         toolbar.getNavigationIcon().setAutoMirrored(true);
         toolbar.setNavigationOnClickListener(v -> finish());
+        toolbar.inflateMenu(R.menu.ai_menu);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_clear_history) {
+                showClearHistoryDialog();
+                return true;
+            }
+            return false;
+        });
 
-        RecyclerView chatRv = findViewById(R.id.chat_rv);
+        chatRv = findViewById(R.id.chat_rv);
         LinearLayoutManager lm = new LinearLayoutManager(this);
         lm.setStackFromEnd(true);
         chatRv.setLayoutManager(lm);
@@ -89,15 +115,12 @@ public class AIActivity extends AppCompatActivity {
         inputMessage = findViewById(R.id.input_message);
         btnSend = findViewById(R.id.btn_send);
 
-        messages.add(new ChatMessage("assistant",
-                "您好！我是遗产通AI法律助手（DeepSeek驱动），专精中国遗产继承法律。\n\n" +
-                "您可以问我任何继承相关问题，例如：\n" +
-                "• 父母去世后房产怎么继承？\n" +
-                "• 自书遗嘱需要什么条件才有效？\n" +
-                "• 独生子女能继承全部遗产吗？\n" +
-                "• 数字资产（加密货币）能继承吗？\n\n" +
-                "我的回答会关联App内的法条和案例，点击即可查看详情。"));
-        adapter.notifyItemInserted(0);
+        loadConversation();
+        if (messages.isEmpty()) {
+            messages.add(new ChatMessage("assistant", WELCOME_MESSAGE));
+        }
+        adapter.notifyDataSetChanged();
+        scrollToBottom();
 
         btnSend.setOnClickListener(v -> sendMessage());
 
@@ -105,6 +128,90 @@ public class AIActivity extends AppCompatActivity {
         if (presetQuestion != null && !presetQuestion.isEmpty()) {
             inputMessage.setText(presetQuestion);
             sendMessage();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveConversation();
+    }
+
+    private void showClearHistoryDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle("清除对话历史")
+            .setMessage("确定要清除所有对话记录吗？此操作不可撤销。")
+            .setPositiveButton("清除", (d, w) -> {
+                messages.clear();
+                messages.add(new ChatMessage("assistant", WELCOME_MESSAGE));
+                adapter.notifyDataSetChanged();
+                saveConversation();
+                Toast.makeText(this, "对话历史已清除", Toast.LENGTH_SHORT).show();
+            })
+            .setNegativeButton("取消", null)
+            .show();
+    }
+
+    private void saveConversation() {
+        try {
+            JSONArray arr = new JSONArray();
+            int start = Math.max(0, messages.size() - MAX_SAVED_MESSAGES);
+            for (int i = start; i < messages.size(); i++) {
+                ChatMessage msg = messages.get(i);
+                JSONObject obj = new JSONObject();
+                obj.put("role", msg.role);
+                obj.put("content", msg.content);
+                if (msg.relatedItems != null && !msg.relatedItems.isEmpty()) {
+                    JSONArray relArr = new JSONArray();
+                    for (RelatedItem ri : msg.relatedItems) {
+                        JSONObject riObj = new JSONObject();
+                        riObj.put("type", ri.type);
+                        riObj.put("id", ri.id);
+                        riObj.put("title", ri.title);
+                        riObj.put("subtitle", ri.subtitle);
+                        relArr.put(riObj);
+                    }
+                    obj.put("related", relArr);
+                }
+                arr.put(obj);
+            }
+            getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putString(KEY_MESSAGES, arr.toString())
+                .apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadConversation() {
+        try {
+            String json = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .getString(KEY_MESSAGES, null);
+            if (json == null) return;
+
+            JSONArray arr = new JSONArray(json);
+            messages.clear();
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
+                ChatMessage msg = new ChatMessage(obj.getString("role"), obj.getString("content"));
+                if (obj.has("related")) {
+                    msg.relatedItems = new ArrayList<>();
+                    JSONArray relArr = obj.getJSONArray("related");
+                    for (int j = 0; j < relArr.length(); j++) {
+                        JSONObject riObj = relArr.getJSONObject(j);
+                        msg.relatedItems.add(new RelatedItem(
+                            riObj.optString("type", "law"),
+                            riObj.optString("id", ""),
+                            riObj.optString("title", ""),
+                            riObj.optString("subtitle", "")
+                        ));
+                    }
+                }
+                messages.add(msg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -133,13 +240,13 @@ public class AIActivity extends AppCompatActivity {
                 adapter.notifyItemChanged(loadingIdx);
                 btnSend.setEnabled(true);
                 scrollToBottom();
+                saveConversation();
             });
         }).start();
     }
 
     private void scrollToBottom() {
-        RecyclerView rv = findViewById(R.id.chat_rv);
-        rv.postDelayed(() -> rv.scrollToPosition(messages.size() - 1), 100);
+        chatRv.postDelayed(() -> chatRv.scrollToPosition(messages.size() - 1), 100);
     }
 
     private String callDeepSeekAPI(String userMessage) {
@@ -147,10 +254,11 @@ public class AIActivity extends AppCompatActivity {
             JSONArray msgArray = new JSONArray();
             msgArray.put(new JSONObject().put("role", "system").put("content", SYSTEM_PROMPT));
 
-            int start = Math.max(0, messages.size() - 11);
+            int start = Math.max(0, messages.size() - 21);
             for (int i = start; i < messages.size() - 1; i++) {
                 ChatMessage m = messages.get(i);
                 if ("正在思考中...".equals(m.content)) continue;
+                if (WELCOME_MESSAGE.equals(m.content)) continue;
                 msgArray.put(new JSONObject().put("role", m.role).put("content", m.content));
             }
 
@@ -217,8 +325,7 @@ public class AIActivity extends AppCompatActivity {
         List<RelatedItem> items = new ArrayList<>();
         Set<String> addedIds = new HashSet<>();
 
-        // Match 【第XXXX条】 or 第XXXX条 (article number patterns)
-        Pattern articlePattern = Pattern.compile("第(\\d{4})条");
+        Pattern articlePattern = Pattern.compile("第(\\d{3,4})条");
         Matcher matcher = articlePattern.matcher(response);
         while (matcher.find()) {
             String articleNum = matcher.group(1);
@@ -229,7 +336,6 @@ public class AIActivity extends AppCompatActivity {
             }
         }
 
-        // Match Chinese number article references: 第一千一百XX条
         for (LawArticle law : dataProvider.getLawArticles()) {
             if (response.contains(law.getArticle()) && addedIds.add("law_" + law.getId())) {
                 items.add(new RelatedItem("law", law.getId(), law.getTitle(),
@@ -237,13 +343,12 @@ public class AIActivity extends AppCompatActivity {
             }
         }
 
-        // Match 【案例:关键词】 patterns
         Pattern casePattern = Pattern.compile("【案例[:：](.+?)】");
         Matcher caseMatcher = casePattern.matcher(response);
         while (caseMatcher.find()) {
             String keyword = caseMatcher.group(1).trim();
             for (CourtCase c : dataProvider.getCourtCases()) {
-                if (addedIds.size() >= 6) break;
+                if (addedIds.size() >= 8) break;
                 boolean match = c.getTitle().contains(keyword) ||
                         c.getCaseType().contains(keyword) ||
                         (c.getTags() != null && c.getTags().stream().anyMatch(t -> t.contains(keyword)));
@@ -254,9 +359,8 @@ public class AIActivity extends AppCompatActivity {
             }
         }
 
-        // Keyword-based matching from law keywords
         for (LawArticle law : dataProvider.getLawArticles()) {
-            if (addedIds.size() >= 6) break;
+            if (addedIds.size() >= 8) break;
             if (law.getKeywords() != null) {
                 for (String kw : law.getKeywords()) {
                     if (kw.length() >= 2 && response.contains(kw) && addedIds.add("law_" + law.getId())) {
@@ -268,7 +372,7 @@ public class AIActivity extends AppCompatActivity {
             }
         }
 
-        if (items.size() > 6) return items.subList(0, 6);
+        if (items.size() > 8) return items.subList(0, 8);
         return items;
     }
 
@@ -363,7 +467,7 @@ public class AIActivity extends AppCompatActivity {
                         Intent intent;
                         if ("law".equals(item.type)) {
                             intent = new Intent(context, LawDetailActivity.class);
-                            intent.putExtra("article_id", item.id);
+                            intent.putExtra("law_id", item.id);
                         } else {
                             intent = new Intent(context, CaseDetailActivity.class);
                             intent.putExtra("case_id", item.id);
@@ -378,8 +482,7 @@ public class AIActivity extends AppCompatActivity {
         private SpannableStringBuilder buildClickableContent(String text) {
             SpannableStringBuilder ssb = new SpannableStringBuilder(text);
 
-            // Highlight 【第XXXX条】 as clickable
-            Pattern p = Pattern.compile("【?第(\\d{4})条】?");
+            Pattern p = Pattern.compile("【?第(\\d{3,4})条】?");
             Matcher m = p.matcher(text);
             while (m.find()) {
                 final String articleId = m.group(1);
@@ -390,7 +493,7 @@ public class AIActivity extends AppCompatActivity {
                     ssb.setSpan(new ClickableSpan() {
                         @Override public void onClick(@NonNull View widget) {
                             Intent intent = new Intent(context, LawDetailActivity.class);
-                            intent.putExtra("article_id", articleId);
+                            intent.putExtra("law_id", articleId);
                             context.startActivity(intent);
                         }
                         @Override public void updateDrawState(@NonNull TextPaint ds) {
@@ -402,14 +505,33 @@ public class AIActivity extends AppCompatActivity {
                 }
             }
 
-            // Highlight 【案例:xxx】 as styled tag
             Pattern cp = Pattern.compile("【案例[:：](.+?)】");
             Matcher cm = cp.matcher(text);
             while (cm.find()) {
-                ssb.setSpan(new ForegroundColorSpan(0xFF2E7D32),
-                        cm.start(), cm.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                ssb.setSpan(new StyleSpan(Typeface.BOLD),
-                        cm.start(), cm.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                final String keyword = cm.group(1).trim();
+                final int cStart = cm.start();
+                final int cEnd = cm.end();
+                ssb.setSpan(new ClickableSpan() {
+                    @Override public void onClick(@NonNull View widget) {
+                        for (CourtCase c : dataProvider.getCourtCases()) {
+                            boolean match = c.getTitle().contains(keyword) ||
+                                c.getCaseType().contains(keyword) ||
+                                (c.getTags() != null && c.getTags().stream().anyMatch(t -> t.contains(keyword)));
+                            if (match) {
+                                Intent intent = new Intent(context, CaseDetailActivity.class);
+                                intent.putExtra("case_id", c.getId());
+                                context.startActivity(intent);
+                                return;
+                            }
+                        }
+                        Toast.makeText(context, "未找到匹配案例，请在案例库中搜索「" + keyword + "」", Toast.LENGTH_SHORT).show();
+                    }
+                    @Override public void updateDrawState(@NonNull TextPaint ds) {
+                        ds.setColor(0xFF2E7D32);
+                        ds.setUnderlineText(true);
+                        ds.setFakeBoldText(true);
+                    }
+                }, cStart, cEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
             return ssb;
