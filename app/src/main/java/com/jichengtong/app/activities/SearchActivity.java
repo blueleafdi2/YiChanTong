@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.button.MaterialButton;
 import com.jichengtong.app.R;
 import com.jichengtong.app.data.DataProvider;
 import com.jichengtong.app.models.*;
@@ -21,6 +22,10 @@ import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
+    private View emptyState;
+    private RecyclerView rv;
+    private String currentQuery = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,9 +33,19 @@ public class SearchActivity extends AppCompatActivity {
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
         EditText searchInput = findViewById(R.id.search_input);
-        RecyclerView rv = findViewById(R.id.search_results_rv);
+        rv = findViewById(R.id.search_results_rv);
+        emptyState = findViewById(R.id.empty_state);
         rv.setLayoutManager(new LinearLayoutManager(this));
         DataProvider data = DataProvider.getInstance(this);
+
+        MaterialButton btnAskAi = findViewById(R.id.btn_ask_ai);
+        btnAskAi.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AIActivity.class);
+            if (currentQuery.length() >= 2) {
+                intent.putExtra("question", currentQuery);
+            }
+            startActivity(intent);
+        });
 
         SearchResultAdapter adapter = new SearchResultAdapter(item -> {
             if (item instanceof LawArticle) {
@@ -69,9 +84,24 @@ public class SearchActivity extends AppCompatActivity {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                String query = s.toString().trim();
-                if (query.length() < 2) { adapter.setItems(new ArrayList<>()); return; }
-                adapter.setItems(data.search(query));
+                currentQuery = s.toString().trim();
+                if (currentQuery.length() < 2) {
+                    adapter.setItems(new ArrayList<>());
+                    emptyState.setVisibility(View.GONE);
+                    rv.setVisibility(View.VISIBLE);
+                    return;
+                }
+                List<Object> results = data.search(currentQuery);
+                adapter.setItems(results);
+                if (results.isEmpty()) {
+                    rv.setVisibility(View.GONE);
+                    emptyState.setVisibility(View.VISIBLE);
+                    TextView subtitle = findViewById(R.id.empty_subtitle);
+                    subtitle.setText("未找到「" + currentQuery + "」相关内容\n试试让AI法律助手为您解答");
+                } else {
+                    rv.setVisibility(View.VISIBLE);
+                    emptyState.setVisibility(View.GONE);
+                }
             }
         });
 

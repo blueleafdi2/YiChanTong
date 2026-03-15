@@ -2,9 +2,10 @@ package com.jichengtong.app.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -14,8 +15,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -60,7 +59,8 @@ public class AIActivity extends AppCompatActivity {
             "3. 用通俗白话解释法律概念，让非法律专业人士也能理解\n" +
             "4. 如果涉及的问题可以关联到特定类型案例，请用【案例:关键词】标记，例如【案例:房产继承】【案例:遗嘱效力】\n" +
             "5. 每次回答结尾提醒：具体问题建议咨询执业律师\n" +
-            "6. 保持专业但亲切的语气，回答控制在500字以内";
+            "6. 保持专业但亲切的语气，回答控制在500字以内\n" +
+            "7. 如果用户的问题与遗产、继承、遗嘱完全无关（如天气、笑话、编程等），你可以简短友好地回答，但必须在回答末尾加上：\"\\n\\n💡 温馨提示：本助手专注于遗产继承法律领域，如有继承相关问题，随时向我提问！\"，且不要引用任何法条或案例标记。";
 
     private static final String PREFS_NAME = "ai_chat_prefs";
     private static final String KEY_MESSAGES = "chat_messages";
@@ -72,6 +72,7 @@ public class AIActivity extends AppCompatActivity {
     private View btnSend;
     private DataProvider dataProvider;
     private RecyclerView chatRv;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private static final String API_KEY = "sk-fcd3d027f43b4113bee5ab9b9c3551c0";
 
@@ -189,7 +190,6 @@ public class AIActivity extends AppCompatActivity {
             String json = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                 .getString(KEY_MESSAGES, null);
             if (json == null) return;
-
             JSONArray arr = new JSONArray(json);
             messages.clear();
             for (int i = 0; i < arr.length(); i++) {
@@ -224,40 +224,23 @@ public class AIActivity extends AppCompatActivity {
         inputMessage.setText("");
         scrollToBottom();
 
-        messages.add(new ChatMessage("assistant", "正在思考中..."));
+        messages.add(new ChatMessage("assistant", "💭 正在思考..."));
         int loadingIdx = messages.size() - 1;
         adapter.notifyItemInserted(loadingIdx);
         scrollToBottom();
         btnSend.setEnabled(false);
 
-        new Thread(() -> {
-            String response = callDeepSeekAPI(text);
-            List<RelatedItem> related = findRelatedContent(response);
-            runOnUiThread(() -> {
-                ChatMessage msg = messages.get(loadingIdx);
-                msg.content = response;
-                msg.relatedItems = related;
-                adapter.notifyItemChanged(loadingIdx);
-                btnSend.setEnabled(true);
-                scrollToBottom();
-                saveConversation();
-            });
-        }).start();
+        new Thread(() -> streamDeepSeekAPI(text, loadingIdx)).start();
     }
 
-    private void scrollToBottom() {
-        chatRv.postDelayed(() -> chatRv.scrollToPosition(messages.size() - 1), 100);
-    }
-
-    private String callDeepSeekAPI(String userMessage) {
+    private void streamDeepSeekAPI(String userMessage, int msgIdx) {
         try {
             JSONArray msgArray = new JSONArray();
             msgArray.put(new JSONObject().put("role", "system").put("content", SYSTEM_PROMPT));
-
             int start = Math.max(0, messages.size() - 21);
             for (int i = start; i < messages.size() - 1; i++) {
                 ChatMessage m = messages.get(i);
-                if ("正在思考中...".equals(m.content)) continue;
+                if (m.content.startsWith("💭 ")) continue;
                 if (WELCOME_MESSAGE.equals(m.content)) continue;
                 msgArray.put(new JSONObject().put("role", m.role).put("content", m.content));
             }
@@ -267,15 +250,16 @@ public class AIActivity extends AppCompatActivity {
             body.put("messages", msgArray);
             body.put("max_tokens", 2000);
             body.put("temperature", 0.7);
-            body.put("stream", false);
+            body.put("stream", true);
 
             URL url = new URL(API_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Authorization", "Bearer " + API_KEY);
+            conn.setRequestProperty("Accept", "text/event-stream");
             conn.setDoOutput(true);
-            conn.setConnectTimeout(30000);
+            conn.setConnectTimeout(15000);
             conn.setReadTimeout(60000);
 
             try (OutputStream os = conn.getOutputStream()) {
@@ -283,42 +267,104 @@ public class AIActivity extends AppCompatActivity {
             }
 
             int code = conn.getResponseCode();
-            BufferedReader reader;
-            if (code >= 200 && code < 300) {
-                reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-            } else {
-                reader = new BufferedReader(new InputStreamReader(conn.getErrorStream(), StandardCharsets.UTF_8));
+            if (code < 200 || code >= 300) {
+                String errorMsg = getErrorMessage(code, conn);
+                mainHandler.post(() -> {
+                    messages.get(msgIdx).content = errorMsg;
+                    adapter.notifyItemChanged(msgIdx);
+                    btnSend.setEnabled(true);
+                    scrollToBottom();
+                    saveConversation();
+                });
+                return;
             }
 
-            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+            StringBuilder fullResponse = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) sb.append(line);
+            long lastUIUpdate = 0;
+
+            while ((line = reader.readLine()) != null) {
+                if (!line.startsWith("data: ")) continue;
+                String data = line.substring(6).trim();
+                if ("[DONE]".equals(data)) break;
+
+                try {
+                    JSONObject chunk = new JSONObject(data);
+                    JSONObject delta = chunk.getJSONArray("choices")
+                        .getJSONObject(0).optJSONObject("delta");
+                    if (delta == null) continue;
+                    String content = delta.optString("content", "");
+                    if (content.isEmpty()) continue;
+
+                    fullResponse.append(content);
+
+                    long now = System.currentTimeMillis();
+                    if (now - lastUIUpdate > 80) {
+                        lastUIUpdate = now;
+                        final String current = fullResponse.toString();
+                        mainHandler.post(() -> {
+                            messages.get(msgIdx).content = current;
+                            adapter.notifyItemChanged(msgIdx);
+                            scrollToBottom();
+                        });
+                    }
+                } catch (Exception ignored) {}
+            }
             reader.close();
 
-            if (code >= 200 && code < 300) {
-                JSONObject resp = new JSONObject(sb.toString());
-                return resp.getJSONArray("choices")
-                        .getJSONObject(0)
-                        .getJSONObject("message")
-                        .getString("content");
-            } else if (code == 401) {
-                return "API Key 无效或已过期。\n\n请联系开发者更新 API Key。";
-            } else if (code == 402) {
-                return "AI 服务账户余额不足，暂时无法使用。\n\n" +
-                    "开发者正在处理中，请稍后重试。\n\n" +
-                    "您也可以直接使用 App 内的丰富资源：\n" +
-                    "• 📚 法律库：45条继承法条逐条解读\n" +
-                    "• 📋 案例库：210+全国真实判例\n" +
-                    "• 💡 知识专题：20+继承法常见场景\n" +
-                    "• 🔥 热门问题：30+高频法律疑问\n\n" +
-                    "如需人工咨询，请前往「我的 → 联系法律专家」";
-            } else {
-                return "AI 服务暂时不可用（错误码 " + code + "）。\n\n" +
-                    "请稍后重试。您也可以直接使用 App 内的法律库和案例库查询。";
-            }
+            final String finalResponse = fullResponse.toString();
+            mainHandler.post(() -> {
+                messages.get(msgIdx).content = finalResponse;
+                adapter.notifyItemChanged(msgIdx);
+                scrollToBottom();
+            });
+
+            List<RelatedItem> related = findRelatedContent(finalResponse);
+            mainHandler.post(() -> {
+                if (!related.isEmpty()) {
+                    messages.get(msgIdx).relatedItems = related;
+                    adapter.notifyItemChanged(msgIdx);
+                    scrollToBottom();
+                }
+                btnSend.setEnabled(true);
+                saveConversation();
+            });
+
         } catch (Exception e) {
-            return "网络连接失败，请检查网络后重试。\n\n您也可以：\n• 使用App内的法律库查询法条\n• 在案例库搜索相关判例\n• 拨打12348免费法律热线";
+            mainHandler.post(() -> {
+                messages.get(msgIdx).content =
+                    "网络连接失败，请检查网络后重试。\n\n您也可以：\n• 使用App内的法律库查询法条\n• 在案例库搜索相关判例\n• 拨打12348免费法律热线";
+                adapter.notifyItemChanged(msgIdx);
+                btnSend.setEnabled(true);
+                scrollToBottom();
+                saveConversation();
+            });
         }
+    }
+
+    private String getErrorMessage(int code, HttpURLConnection conn) {
+        try {
+            BufferedReader r = new BufferedReader(new InputStreamReader(conn.getErrorStream(), StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            String l;
+            while ((l = r.readLine()) != null) sb.append(l);
+            r.close();
+        } catch (Exception ignored) {}
+
+        if (code == 401) return "API Key 无效或已过期。\n\n请联系开发者更新 API Key。";
+        if (code == 402) return "AI 服务账户余额不足，暂时无法使用。\n\n" +
+            "开发者正在处理中，请稍后重试。\n\n" +
+            "您也可以直接使用 App 内的丰富资源：\n" +
+            "• 📚 法律库：45条继承法条逐条解读\n• 📋 案例库：210+全国真实判例\n" +
+            "• 💡 知识专题：20+继承法常见场景\n• 🔥 热门问题：30+高频法律疑问\n\n" +
+            "如需人工咨询，请前往「我的 → 联系法律专家」";
+        return "AI 服务暂时不可用（错误码 " + code + "）。\n\n请稍后重试。";
+    }
+
+    private void scrollToBottom() {
+        chatRv.postDelayed(() -> chatRv.scrollToPosition(messages.size() - 1), 50);
     }
 
     private List<RelatedItem> findRelatedContent(String response) {
@@ -371,7 +417,6 @@ public class AIActivity extends AppCompatActivity {
                 }
             }
         }
-
         if (items.size() > 8) return items.subList(0, 8);
         return items;
     }
@@ -387,15 +432,9 @@ public class AIActivity extends AppCompatActivity {
     }
 
     static class RelatedItem {
-        String type;
-        String id;
-        String title;
-        String subtitle;
+        String type, id, title, subtitle;
         RelatedItem(String type, String id, String title, String subtitle) {
-            this.type = type;
-            this.id = id;
-            this.title = title;
-            this.subtitle = subtitle;
+            this.type = type; this.id = id; this.title = title; this.subtitle = subtitle;
         }
     }
 
@@ -404,10 +443,8 @@ public class AIActivity extends AppCompatActivity {
         private final List<ChatMessage> items;
         private final DataProvider dataProvider;
 
-        ChatAdapter(Context context, List<ChatMessage> items, DataProvider dataProvider) {
-            this.context = context;
-            this.items = items;
-            this.dataProvider = dataProvider;
+        ChatAdapter(Context ctx, List<ChatMessage> items, DataProvider dp) {
+            this.context = ctx; this.items = items; this.dataProvider = dp;
         }
 
         @Override public VH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -418,7 +455,6 @@ public class AIActivity extends AppCompatActivity {
         @Override public void onBindViewHolder(VH holder, int position) {
             ChatMessage msg = items.get(position);
             boolean isUser = "user".equals(msg.role);
-
             holder.role.setText(isUser ? "我" : "🤖 AI 法律助手");
             holder.role.setGravity(isUser ? Gravity.END : Gravity.START);
 
@@ -432,23 +468,16 @@ public class AIActivity extends AppCompatActivity {
             }
 
             ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) holder.card.getLayoutParams();
-            if (isUser) {
-                mlp.setMarginStart(dpToPx(60));
-                mlp.setMarginEnd(0);
-            } else {
-                mlp.setMarginStart(0);
-                mlp.setMarginEnd(dpToPx(60));
-            }
+            if (isUser) { mlp.setMarginStart(dpToPx(60)); mlp.setMarginEnd(0); }
+            else { mlp.setMarginStart(0); mlp.setMarginEnd(dpToPx(60)); }
             holder.card.setLayoutParams(mlp);
             ((LinearLayout) holder.itemView).setGravity(isUser ? Gravity.END : Gravity.START);
             holder.card.setCardBackgroundColor(isUser ? 0xFFE8F5E9 : 0xFFFFFFFF);
 
             holder.relatedContainer.removeAllViews();
             holder.relatedContainer.setVisibility(View.GONE);
-
             if (!isUser && msg.relatedItems != null && !msg.relatedItems.isEmpty()) {
                 holder.relatedContainer.setVisibility(View.VISIBLE);
-
                 TextView header = new TextView(context);
                 header.setText("📎 相关内容（点击查看详情）");
                 header.setTextSize(12);
@@ -458,8 +487,7 @@ public class AIActivity extends AppCompatActivity {
 
                 for (RelatedItem item : msg.relatedItems) {
                     Chip chip = new Chip(context);
-                    String label = ("law".equals(item.type) ? "📜 " : "⚖️ ") + item.title;
-                    chip.setText(label);
+                    chip.setText(("law".equals(item.type) ? "📜 " : "⚖️ ") + item.title);
                     chip.setTextSize(12);
                     chip.setChipBackgroundColorResource(
                             "law".equals(item.type) ? R.color.primary_container : R.color.secondary_container);
@@ -481,79 +509,57 @@ public class AIActivity extends AppCompatActivity {
 
         private SpannableStringBuilder buildClickableContent(String text) {
             SpannableStringBuilder ssb = new SpannableStringBuilder(text);
-
             Pattern p = Pattern.compile("【?第(\\d{3,4})条】?");
             Matcher m = p.matcher(text);
             while (m.find()) {
                 final String articleId = m.group(1);
                 LawArticle law = dataProvider.getLawArticleById(articleId);
                 if (law != null) {
-                    int start = m.start();
-                    int end = m.end();
                     ssb.setSpan(new ClickableSpan() {
-                        @Override public void onClick(@NonNull View widget) {
-                            Intent intent = new Intent(context, LawDetailActivity.class);
-                            intent.putExtra("law_id", articleId);
-                            context.startActivity(intent);
+                        @Override public void onClick(@NonNull View w) {
+                            Intent i = new Intent(context, LawDetailActivity.class);
+                            i.putExtra("law_id", articleId);
+                            context.startActivity(i);
                         }
                         @Override public void updateDrawState(@NonNull TextPaint ds) {
-                            ds.setColor(0xFF1565C0);
-                            ds.setUnderlineText(true);
-                            ds.setFakeBoldText(true);
+                            ds.setColor(0xFF1565C0); ds.setUnderlineText(true); ds.setFakeBoldText(true);
                         }
-                    }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }, m.start(), m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
-
             Pattern cp = Pattern.compile("【案例[:：](.+?)】");
             Matcher cm = cp.matcher(text);
             while (cm.find()) {
                 final String keyword = cm.group(1).trim();
-                final int cStart = cm.start();
-                final int cEnd = cm.end();
                 ssb.setSpan(new ClickableSpan() {
-                    @Override public void onClick(@NonNull View widget) {
+                    @Override public void onClick(@NonNull View w) {
                         for (CourtCase c : dataProvider.getCourtCases()) {
-                            boolean match = c.getTitle().contains(keyword) ||
-                                c.getCaseType().contains(keyword) ||
-                                (c.getTags() != null && c.getTags().stream().anyMatch(t -> t.contains(keyword)));
-                            if (match) {
-                                Intent intent = new Intent(context, CaseDetailActivity.class);
-                                intent.putExtra("case_id", c.getId());
-                                context.startActivity(intent);
+                            if (c.getTitle().contains(keyword) || c.getCaseType().contains(keyword) ||
+                                (c.getTags() != null && c.getTags().stream().anyMatch(t -> t.contains(keyword)))) {
+                                Intent i = new Intent(context, CaseDetailActivity.class);
+                                i.putExtra("case_id", c.getId());
+                                context.startActivity(i);
                                 return;
                             }
                         }
-                        Toast.makeText(context, "未找到匹配案例，请在案例库中搜索「" + keyword + "」", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "未找到匹配案例，请在案例库中搜索", Toast.LENGTH_SHORT).show();
                     }
                     @Override public void updateDrawState(@NonNull TextPaint ds) {
-                        ds.setColor(0xFF2E7D32);
-                        ds.setUnderlineText(true);
-                        ds.setFakeBoldText(true);
+                        ds.setColor(0xFF2E7D32); ds.setUnderlineText(true); ds.setFakeBoldText(true);
                     }
-                }, cStart, cEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, cm.start(), cm.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-
             return ssb;
         }
 
         private int dpToPx(int dp) {
             return (int) (dp * context.getResources().getDisplayMetrics().density);
         }
-
         @Override public int getItemCount() { return items.size(); }
-
         static class VH extends RecyclerView.ViewHolder {
-            TextView role, content;
-            CardView card;
-            LinearLayout relatedContainer;
-            VH(View v) {
-                super(v);
-                role = v.findViewById(R.id.chat_role);
-                content = v.findViewById(R.id.chat_content);
-                card = v.findViewById(R.id.chat_card);
-                relatedContainer = v.findViewById(R.id.related_container);
-            }
+            TextView role, content; CardView card; LinearLayout relatedContainer;
+            VH(View v) { super(v); role=v.findViewById(R.id.chat_role); content=v.findViewById(R.id.chat_content);
+                card=v.findViewById(R.id.chat_card); relatedContainer=v.findViewById(R.id.related_container); }
         }
     }
 }

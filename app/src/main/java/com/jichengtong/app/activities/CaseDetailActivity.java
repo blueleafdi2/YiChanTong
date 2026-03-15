@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.jichengtong.app.R;
 import com.jichengtong.app.data.DataProvider;
 import com.jichengtong.app.models.CourtCase;
@@ -57,20 +59,21 @@ public class CaseDetailActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.case_summary)).setText(courtCase.getCaseSummary());
         ((TextView) findViewById(R.id.case_judgment)).setText(courtCase.getJudgment());
 
-        LinearLayout tagsContainer = findViewById(R.id.case_tags_container);
+        ChipGroup tagsContainer = findViewById(R.id.case_tags_container);
         if (courtCase.getTags() != null) {
             for (String tag : courtCase.getTags()) {
-                TextView tagView = new TextView(this);
-                tagView.setText(tag);
-                tagView.setTextSize(11);
-                tagView.setTextColor(0xFF0D47A1);
-                tagView.setBackgroundResource(R.drawable.bg_tag);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMarginEnd(8);
-                params.setMargins(0, 0, 8, 8);
-                tagView.setLayoutParams(params);
-                tagsContainer.addView(tagView);
+                Chip chip = new Chip(this);
+                chip.setText(tag);
+                chip.setTextSize(11);
+                chip.setTextColor(0xFF0D47A1);
+                chip.setChipBackgroundColorResource(R.color.primary_container);
+                chip.setChipStrokeColorResource(R.color.primary);
+                chip.setChipStrokeWidth(1f);
+                chip.setClickable(false);
+                chip.setCheckable(false);
+                chip.setEnsureMinTouchTargetSize(false);
+                chip.setChipMinHeight(0);
+                tagsContainer.addView(chip);
             }
         }
 
