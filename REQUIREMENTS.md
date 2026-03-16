@@ -24,8 +24,8 @@
 | 6 scenario tags | 场景化快捷入口 | 点击跳转至 TopicDetailActivity，对应 topic_01, topic_02, topic_01, topic_10, topic_09, topic_11 |
 | AI assistant entry | AI 法律助手入口卡片 | 点击打开 AIActivity |
 | Featured case | 每日推荐案例 | 基于日期轮换展示，优先多标签复杂案例，点击打开 CaseDetailActivity |
-| 8 FAQ items | 热门问题列表 | 按预设顺序展示（faq_01, faq_07, faq_03 等），点击跳转 TopicDetailActivity |
-| Knowledge topics | 知识专题列表 | 展示前 8 个专题，点击跳转 TopicDetailActivity |
+| 8 FAQ items | 热门问题列表 | 按预设顺序展示（faq_01, faq_07, faq_03 等），共 40 个 FAQ，点击跳转 TopicDetailActivity |
+| Knowledge topics | 知识专题列表 | 25 个知识专题，首页展示前 8 个，点击跳转 TopicDetailActivity |
 | Law references | 法条引用 | 所有法条引用可点击，跳转 LawDetailActivity |
 
 **Scenario Tags:**
@@ -52,6 +52,7 @@
 
 **Law Article Fields:**
 - id, article, chapter, title, originalText, plainExplanation, lifeExample, judicialInterpretation, legislativeHistory, keywords
+- 23 条法条含《继承编解释（一）》具体条文编号引用
 
 ---
 
@@ -213,3 +214,4 @@
 | V4.1 | 官方来源 WebView、搜索按钮、移动端适配 |
 | V4.2 | Word 导出、中文字体兼容、联系页 |
 | V4.3.0+ | 125 术语、390 案例、45 法条、6 工具、隐私政策、数据来源说明 |
+| V4.4.0 | **新增 5 个知识专题**（topic_21–25）：遗嘱信托实务指南、民法典继承编重大变化解读、保险金养老金与遗产继承、遗产继承纠纷解决路径、多子女家庭遗产分配实务；**新增 10 个 FAQ**（faq_31–40）：遗嘱信托设立、保险金是否属于遗产、养老金/住房公积金继承、死亡赔偿金分配、民法典重大变化、彩礼嫁妆继承、调解 vs 诉讼选择、父母偏心问题、录音录像遗嘱有效性、法律援助渠道；**23 条法条增强**：补充《继承编解释（一）》具体条文编号；**内容总量**：45 法条、25 专题、40 FAQ、125 术语、390 案例 |

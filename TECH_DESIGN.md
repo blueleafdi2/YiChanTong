@@ -1,5 +1,9 @@
 # 遗产通 (YiChanTong) — Technical Design Document
 
+**Version**: V4.4.0
+
+---
+
 ## 1. Architecture Overview
 
 ### Technology Stack
@@ -76,13 +80,13 @@ com.jichengtong.app
 ```
 assets/
 ├── laws/
-│   └── civil_code_inheritance.json   # 45 articles (1119-1163)
+│   └── civil_code_inheritance.json   # 45 articles (1119-1163), 23 with 继承编解释(一) JI refs
 ├── cases/
 │   └── court_cases.json              # 390 cases
 ├── knowledge/
 │   ├── glossary.json                 # 125 terms
-│   ├── topics.json                   # 20 topics
-│   └── faq.json                      # 30 FAQs
+│   ├── topics.json                   # 25 topics
+│   └── faq.json                      # 40 FAQs
 ├── tools/
 │   └── tools_data.json               # 6 tools
 └── images/
@@ -209,3 +213,31 @@ apksigner sign --ks yichangtong-release.jks --out app-release.apk app-release-al
 | ContactActivity | false | MainActivity |
 
 **Permissions**: `INTERNET`, `CALL_PHONE`
+
+---
+
+## 9. Version History
+
+### V4.4.0 — Data Layer Updates (No Code Changes)
+
+All updates are **data-only** in JSON assets; no application code changes required.
+
+#### Data Layer Changes
+
+| Asset | Change |
+|-------|--------|
+| `topics.json` | Expanded from 20 to 25 entries |
+| `faq.json` | Expanded from 30 to 40 entries |
+| `civil_code_inheritance.json` | 23 articles enhanced with 继承编解释(一) article number references in `judicialInterpretation` field |
+
+**Judicial Interpretation Format**: 【继承编解释（一）第X-Y条】 prepended to existing text in `judicialInterpretation` for applicable articles.
+
+#### Content Statistics (V4.4.0)
+
+| Content Type | Count | Notes |
+|--------------|-------|-------|
+| Law articles | 45 | All with enhanced JI references where applicable |
+| Knowledge topics | 25 | +5 new: trust, civil code changes, insurance/pension, disputes, multi-child |
+| FAQs | 40 | +10 new: trust, insurance, pension, compensation, civil code changes, dowry, mediation, favoritism, video wills, legal aid |
+| Glossary terms | 125 | — |
+| Court cases | 390 | — |

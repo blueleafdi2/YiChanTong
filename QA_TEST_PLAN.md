@@ -1,6 +1,6 @@
 # 遗产通 (Inheritance Law App) QA Test Plan
 
-**Version:** 4.3.1  
+**Version:** 4.4.0  
 **Platform:** Android  
 **Document Date:** 2026-03-16  
 **Language:** 中文 (Section Headers in English)
@@ -10,7 +10,7 @@
 ## 1. Document Overview
 
 ### 1.1 Purpose
-本文档为遗产通 Android 继承法应用提供全面的质量保证测试计划，覆盖所有功能模块、边界条件、UI/UX 验证及 V4.1.0–V4.3.1 回归测试项。
+本文档为遗产通 Android 继承法应用提供全面的质量保证测试计划，覆盖所有功能模块、边界条件、UI/UX 验证及 V4.1.0–V4.4.0 回归测试项。
 
 ### 1.2 Scope
 - 首页、法律库、案例库、工具箱、我的、AI 聊天、全局搜索、法律词典、全局导航与法条链接
@@ -18,6 +18,7 @@
 - V4.2.0 变更：AI 流式优化、搜索空状态、案例标签 ChipGroup、Word 中文字体、案例库扩展至 390 个
 - V4.3.0 变更：法律词典（125 术语）、GlossaryActivity、术语高亮与弹窗、GlossaryHelper
 - V4.3.1 变更：案例时间倒序、官方来源卡片与 WebView、sourceUrl 覆盖、Mine 版本号与数据源更新、AI 错误提示更新
+- V4.4.0 变更：知识主题扩展至 25 个、FAQ 扩展至 40 个、司法解释增强（23 条法条关联继承编解释）
 
 ### 1.3 Test Environment
 - Android 设备/模拟器（建议覆盖 API 21–34）
@@ -122,7 +123,7 @@
 | MN-007 | Data Integrity | 收藏/笔记/历史持久化 | 应用重启后收藏、笔记、阅读历史不丢失 | P0 |
 | MN-008 | Edge Case | 空收藏/笔记/历史 | 无数据时显示空状态提示，不崩溃 | P1 |
 | MN-009 | UI/UX | 我的页面布局 | 各入口清晰可点击，无遮挡 | P1 |
-| MN-010 | Functional | 版本号和数据源更新 | 「我的」关于页面显示版本 4.3.1，不含硬编码案例数量，数据来源列表完整（6 个官网含域名） | P0 |
+| MN-010 | Functional | 版本号和数据源更新 | 「我的」关于页面显示版本 4.4.0，不含硬编码案例数量，数据来源列表完整（6 个官网含域名） | P0 |
 | MN-011 | Functional | AI 错误提示更新 | AI 余额不足时提示信息中案例数显示 390+ 而非 210+ | P0 |
 
 ---
@@ -211,7 +212,40 @@
 
 ---
 
-## 11. Regression Test Suite (V4.1.0–V4.3.1)
+## 11. V4.4.0 Content Enhancement
+
+### 11.1 Knowledge Topics (知识主题)
+
+| Test ID | Category | Test Description | Expected Result | Priority |
+|---------|----------|-------------------|-----------------|----------|
+| TC-NEW-01 | Functional | 验证 25 个主题加载正确 | 知识主题从 20 个扩展至 25 个，全部正确加载展示 | P0 |
+| TC-NEW-02 | Functional | topic_21（遗嘱信托）内容完整性 | topic_21 遗嘱信托包含完整内容，含《信托法》引用 | P0 |
+| TC-NEW-03 | Functional | topic_22（民法典变化）对比展示 | topic_22 民法典变化展示旧法 vs 新法对比 | P0 |
+| TC-NEW-04 | Functional | topic_23（保险金养老金）分类表 | topic_23 保险金养老金有清晰的 是/否遗产 分类表 | P0 |
+| TC-NEW-05 | Functional | topic_24（纠纷解决）决策树 | topic_24 纠纷解决包含决策树路径 | P0 |
+| TC-NEW-06 | Functional | topic_25（多子女）分配规则 | topic_25 多子女包含分配例外规则 | P0 |
+
+### 11.2 FAQs (热门问题)
+
+| Test ID | Category | Test Description | Expected Result | Priority |
+|---------|----------|-------------------|-----------------|----------|
+| TC-NEW-07 | Functional | 验证 40 个 FAQ 加载正确 | FAQ 从 30 个扩展至 40 个，全部正确加载展示 | P0 |
+| TC-NEW-08 | Functional | faq_31 至 faq_40 字段完整性 | 新增 faq_31 至 faq_40 均包含 question、answer、relatedLaws、tags | P0 |
+| TC-NEW-09 | Functional | 新 FAQ 搜索可检索 | 新增 FAQ 可在搜索中正确返回结果 | P0 |
+| TC-NEW-10 | Functional | 新 FAQ 关联主题链接 | 新增 FAQ 可正确链接至相关主题 | P0 |
+
+### 11.3 Judicial Interpretation Enhancement (司法解释增强)
+
+| Test ID | Category | Test Description | Expected Result | Priority |
+|---------|----------|-------------------|-----------------|----------|
+| TC-NEW-11 | Functional | 第 1121 条司法解释展示 | 第 1121 条显示【继承编解释（一）第1-4条】 | P0 |
+| TC-NEW-12 | Functional | 第 1125 条司法解释展示 | 第 1125 条显示【继承编解释（一）第5-9条】 | P0 |
+| TC-NEW-13 | Functional | 第 1142 条司法解释展示 | 第 1142 条显示【继承编解释（一）第38条】 | P0 |
+| TC-NEW-14 | Functional | 23 条增强法条展示 | 全部 23 条增强法条均显示具体条文编号 | P0 |
+
+---
+
+## 12. Regression Test Suite (V4.1.0–V4.4.0)
 
 | Test ID | Category | Test Description | Expected Result | Priority |
 |---------|----------|-------------------|-----------------|----------|
@@ -239,10 +273,14 @@
 | RG-022 | Regression | V4.3.1 法律词典无 ANR | 法律词典功能正常使用无卡顿 | P0 |
 | RG-023 | Regression | V4.3.1 案例标签词典关联 | 标签匹配词典术语时显示 ? 图标并可点击 | P0 |
 | RG-024 | Regression | V4.3.1 法律详情术语高亮 | 仅 hard 难度术语高亮，无 ANR | P0 |
+| TC-REG-NEW-01 | Regression | V4.4.0 原有 20 个主题正常 | 原有 20 个知识主题仍正确加载并展示 | P0 |
+| TC-REG-NEW-02 | Regression | V4.4.0 原有 30 个 FAQ 正常 | 原有 30 个 FAQ 仍正确加载并展示 | P0 |
+| TC-REG-NEW-03 | Regression | V4.4.0 搜索全内容类型 | 搜索仍可返回所有内容类型的结果 | P0 |
+| TC-REG-NEW-04 | Regression | V4.4.0 AI 助手内容数量 | AI 助手引用更新后的内容数量（25 主题、40 FAQ） | P0 |
 
 ---
 
-## 12. Test Case Summary
+## 13. Test Case Summary
 
 | Category | P0 | P1 | P2 | Total |
 |----------|----|----|----|-------|
@@ -255,26 +293,28 @@
 | Search | 8 | 3 | 1 | 13 |
 | Legal Glossary | 14 | 3 | 0 | 17 |
 | Global | 3 | 6 | 1 | 11 |
-| Regression | 24 | 0 | 0 | 24 |
-| **Total** | **96** | **36** | **4** | **136** |
+| V4.4.0 Content Enhancement | 14 | 0 | 0 | 14 |
+| Regression | 28 | 0 | 0 | 28 |
+| **Total** | **114** | **36** | **4** | **154** |
 
 ---
 
-## 13. Test Execution Notes
+## 14. Test Execution Notes
 
-### 13.1 Priority Definitions
+### 14.1 Priority Definitions
 - **P0**: 核心功能，阻塞发布，必须全部通过
 - **P1**: 重要功能，建议全部通过后再发布
 - **P2**: 增强体验，可酌情延后
 
-### 13.2 Recommended Execution Order
-1. P0 回归用例（RG-001 ~ RG-024）
-2. 各模块 P0 功能用例
-3. 全局 P0 用例（GL-001 ~ GL-003）
-4. P1 用例
-5. P2 用例
+### 14.2 Recommended Execution Order
+1. P0 回归用例（RG-001 ~ RG-024, TC-REG-NEW-01 ~ TC-REG-NEW-04）
+2. V4.4.0 内容增强用例（TC-NEW-01 ~ TC-NEW-14）
+3. 各模块 P0 功能用例
+4. 全局 P0 用例（GL-001 ~ GL-003）
+5. P1 用例
+6. P2 用例
 
-### 13.3 Defect Severity Mapping
+### 14.3 Defect Severity Mapping
 - 功能无法使用 → Critical
 - 功能异常但可绕过 → Major
 - 体验问题、边界异常 → Minor
@@ -282,7 +322,7 @@
 
 ---
 
-## 14. Sign-off
+## 15. Sign-off
 
 | Role | Name | Date | Signature |
 |------|------|------|------------|
@@ -292,5 +332,5 @@
 
 ---
 
-*Document Version: 1.2*  
+*Document Version: 1.3*  
 *Last Updated: 2026-03-16*
