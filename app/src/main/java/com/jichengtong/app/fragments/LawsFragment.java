@@ -31,6 +31,7 @@ public class LawsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        com.jichengtong.app.utils.Analytics.getInstance(requireContext()).logScreenView("laws");
         data = DataProvider.getInstance(requireContext());
 
         RecyclerView rv = view.findViewById(R.id.laws_rv);

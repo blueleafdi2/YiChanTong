@@ -40,6 +40,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        com.jichengtong.app.utils.Analytics.getInstance(requireContext()).logScreenView("home");
         DataProvider data = DataProvider.getInstance(requireContext());
 
         view.findViewById(R.id.search_bar).setOnClickListener(v ->

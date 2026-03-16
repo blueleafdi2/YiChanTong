@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,8 @@ import com.jichengtong.app.R;
 import com.jichengtong.app.activities.*;
 
 public class MineFragment extends Fragment {
+    private int devTapCount = 0;
+    private long lastTapTime = 0;
 
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,5 +40,22 @@ public class MineFragment extends Fragment {
             intent.putExtra("title", "隐私政策");
             startActivity(intent);
         });
+
+        View aboutSection = view.findViewById(R.id.about_section);
+        if (aboutSection != null) {
+            aboutSection.setOnClickListener(v -> {
+                long now = System.currentTimeMillis();
+                if (now - lastTapTime > 2000) devTapCount = 0;
+                lastTapTime = now;
+                devTapCount++;
+                if (devTapCount == 5) {
+                    devTapCount = 0;
+                    startActivity(new Intent(requireContext(), AnalyticsDashboardActivity.class));
+                } else if (devTapCount >= 3) {
+                    Toast.makeText(requireContext(),
+                            "再点 " + (5 - devTapCount) + " 次进入开发者模式", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

@@ -44,6 +44,7 @@ public class CasesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        com.jichengtong.app.utils.Analytics.getInstance(requireContext()).logScreenView("cases");
         data = DataProvider.getInstance(requireContext());
         caseCountText = view.findViewById(R.id.case_count_text);
         emptyState = view.findViewById(R.id.empty_state);
