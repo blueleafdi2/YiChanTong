@@ -169,6 +169,32 @@
 
 ---
 
+### 2.9 Developer Analytics Dashboard
+
+| Feature | Description | Acceptance Criteria |
+|---------|-------------|---------------------|
+| Hidden access | 隐藏入口 | 在「我的」页面「关于」区域连续点击 5 次进入 AnalyticsDashboardActivity |
+| Event statistics | 事件统计 | 实时展示各事件类型计数 |
+| Event log | 事件日志 | 展示最近 30 条事件记录，含时间戳与参数 |
+| Export full report | 完整报告导出 | exportFullReport() 生成含设备信息、事件计数、近期事件的完整 JSON |
+| GitHub Gist upload | Gist 上传 | 开发者输入 GitHub PAT，应用创建/更新私有 gist 上传分析数据 |
+| Copy / Share / Clear | 操作按钮 | 支持复制 JSON、分享报告、清空日志 |
+| Ad status panel | 广告状态面板 | 展示各广告位启用状态 |
+
+---
+
+### 2.10 Ad Management Framework
+
+| Feature | Description | Acceptance Criteria |
+|---------|-------------|---------------------|
+| AdManager utility | 广告管理类 | AdManager.java 由 RemoteConfig 控制，支持 banner、interstitial、rewarded video、native |
+| Default OFF | 默认关闭 | 所有广告默认关闭，通过 remote_config.json 服务端切换 |
+| New user grace period | 新用户免广告期 | 可配置天数，新用户期内不展示广告 |
+| Frequency capping | 频次控制 | 插屏广告支持频次上限 |
+| SDK integration points | SDK 接入点 | 预留穿山甲/优量汇接入点，首版 APK 不含实际广告 SDK |
+
+---
+
 ## 3. Non-Functional Requirements
 
 ### Performance
@@ -215,3 +241,4 @@
 | V4.2 | Word 导出、中文字体兼容、联系页 |
 | V4.3.0+ | 125 术语、390 案例、45 法条、6 工具、隐私政策、数据来源说明 |
 | V4.4.0 | **新增 5 个知识专题**（topic_21–25）：遗嘱信托实务指南、民法典继承编重大变化解读、保险金养老金与遗产继承、遗产继承纠纷解决路径、多子女家庭遗产分配实务；**新增 10 个 FAQ**（faq_31–40）：遗嘱信托设立、保险金是否属于遗产、养老金/住房公积金继承、死亡赔偿金分配、民法典重大变化、彩礼嫁妆继承、调解 vs 诉讼选择、父母偏心问题、录音录像遗嘱有效性、法律援助渠道；**23 条法条增强**：补充《继承编解释（一）》具体条文编号；**内容总量**：45 法条、25 专题、40 FAQ、125 术语、390 案例 |
+| V4.6.0 | **Analytics 增强**：详细事件历史（最多 500 条，含时间戳与参数）；exportFullReport()、getEventLogJson()、clearEventLog()；**开发者仪表盘**：隐藏入口（关于 5 次点击）、实时事件统计、最近 30 条日志、GitHub Gist 上传、复制/分享/清空；**AdManager 框架**：RemoteConfig 控制、banner/interstitial/rewarded/native、新用户免广告期、插屏频次控制、穿山甲/优量汇接入点预留；**RemoteConfig**：getAdConfig()、ad_config 按 placement 控制；**屏幕浏览追踪**：HomeFragment、LawsFragment、CasesFragment 调用 logScreenView() |

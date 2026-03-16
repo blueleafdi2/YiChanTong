@@ -1,6 +1,6 @@
 # 遗产通 (YiChanTong) — Technical Design Document
 
-**Version**: V4.4.0
+**Version**: V4.6.0
 
 ---
 
@@ -47,7 +47,8 @@ com.jichengtong.app
 │   ├── FavoritesActivity.java
 │   ├── NotesActivity.java
 │   ├── HistoryActivity.java
-│   └── ContactActivity.java
+│   ├── ContactActivity.java
+│   └── AnalyticsDashboardActivity.java   # Developer analytics (hidden)
 ├── adapters/
 │   ├── LawAdapter.java
 │   ├── CaseAdapter.java
@@ -73,7 +74,9 @@ com.jichengtong.app
 └── utils/
     ├── FavoritesManager.java      # SharedPreferences for favorites, notes, history
     ├── LawLinkHelper.java         # Clickable law references → LawDetailActivity
-    └── GlossaryHelper.java        # Term popup, glossary highlighting
+    ├── GlossaryHelper.java        # Term popup, glossary highlighting
+    ├── AdManager.java             # Ad framework controlled by RemoteConfig
+    └── RemoteConfig.java          # getAdConfig(), ad_config schema
 ```
 
 ### Asset Structure
@@ -211,6 +214,7 @@ apksigner sign --ks yichangtong-release.jks --out app-release.apk app-release-al
 | NotesActivity | false | MainActivity |
 | HistoryActivity | false | MainActivity |
 | ContactActivity | false | MainActivity |
+| AnalyticsDashboardActivity | false | MainActivity |
 
 **Permissions**: `INTERNET`, `CALL_PHONE`
 
@@ -241,3 +245,49 @@ All updates are **data-only** in JSON assets; no application code changes requir
 | FAQs | 40 | +10 new: trust, insurance, pension, compensation, civil code changes, dowry, mediation, favoritism, video wills, legal aid |
 | Glossary terms | 125 | — |
 | Court cases | 390 | — |
+
+---
+
+## 10. V4.6.0 Architecture Additions
+
+### 10.1 Analytics Enhancement
+
+- **Event log**: In-memory ring buffer, up to 500 entries with timestamp and parameters
+- **Methods**: `exportFullReport()` (full JSON with device info, event counts, recent events), `getEventLogJson()`, `clearEventLog()`
+- **Screen view tracking**: `logScreenView(screenName)` called from HomeFragment, LawsFragment, CasesFragment
+
+### 10.2 Developer Dashboard (AnalyticsDashboardActivity)
+
+- **Hidden access**: Tap "About" section 5 times in Mine page within a time window; timer resets if taps exceed interval
+- **Features**: Real-time event statistics, recent 30 event log entries with timestamps
+- **GitHub Gist integration**: Developer enters GitHub Personal Access Token; app creates/updates a private gist with analytics JSON via GitHub API
+- **Actions**: Copy JSON, Share report, Clear log
+- **Ad status panel**: Displays enabled/disabled state per ad placement
+
+### 10.3 AdManager Framework
+
+- **AdManager.java**: Utility class controlled by RemoteConfig
+- **Ad types**: banner, interstitial, rewarded video, native
+- **Default**: All ads OFF; toggled server-side via `remote_config.json`
+- **New user grace period**: Configurable days (no ads for new users)
+- **Frequency capping**: Interstitial ads support max impressions per session/day
+- **SDK integration points**: Ready for 穿山甲 (Pangle) / 优量汇 (Gromore); no actual ad SDK in first submission APK
+
+### 10.4 RemoteConfig ad_config Schema
+
+```json
+{
+  "ad_config": {
+    "enabled": false,
+    "new_user_ad_free_days": 7,
+    "placements": {
+      "banner_home": { "enabled": false },
+      "interstitial_exit": { "enabled": false, "frequency_cap_minutes": 60 },
+      "rewarded_video": { "enabled": false },
+      "native_list": { "enabled": false }
+    }
+  }
+}
+```
+
+- **getAdConfig()**: Returns full ad configuration JSON from RemoteConfig

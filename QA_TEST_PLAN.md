@@ -1,6 +1,6 @@
 # 遗产通 (Inheritance Law App) QA Test Plan
 
-**Version:** 4.4.0  
+**Version:** 4.6.0  
 **Platform:** Android  
 **Document Date:** 2026-03-16  
 **Language:** 中文 (Section Headers in English)
@@ -10,7 +10,7 @@
 ## 1. Document Overview
 
 ### 1.1 Purpose
-本文档为遗产通 Android 继承法应用提供全面的质量保证测试计划，覆盖所有功能模块、边界条件、UI/UX 验证及 V4.1.0–V4.4.0 回归测试项。
+本文档为遗产通 Android 继承法应用提供全面的质量保证测试计划，覆盖所有功能模块、边界条件、UI/UX 验证及 V4.1.0–V4.6.0 回归测试项。
 
 ### 1.2 Scope
 - 首页、法律库、案例库、工具箱、我的、AI 聊天、全局搜索、法律词典、全局导航与法条链接
@@ -19,6 +19,7 @@
 - V4.3.0 变更：法律词典（125 术语）、GlossaryActivity、术语高亮与弹窗、GlossaryHelper
 - V4.3.1 变更：案例时间倒序、官方来源卡片与 WebView、sourceUrl 覆盖、Mine 版本号与数据源更新、AI 错误提示更新
 - V4.4.0 变更：知识主题扩展至 25 个、FAQ 扩展至 40 个、司法解释增强（23 条法条关联继承编解释）
+- V4.6.0 变更：Analytics 增强、开发者仪表盘、AdManager 框架、RemoteConfig ad_config、屏幕浏览追踪
 
 ### 1.3 Test Environment
 - Android 设备/模拟器（建议覆盖 API 21–34）
@@ -125,6 +126,8 @@
 | MN-009 | UI/UX | 我的页面布局 | 各入口清晰可点击，无遮挡 | P1 |
 | MN-010 | Functional | 版本号和数据源更新 | 「我的」关于页面显示版本 4.4.0，不含硬编码案例数量，数据来源列表完整（6 个官网含域名） | P0 |
 | MN-011 | Functional | AI 错误提示更新 | AI 余额不足时提示信息中案例数显示 390+ 而非 210+ | P0 |
+| MN-012 | Functional | V4.6.0 开发者仪表盘入口 | 在「我的」页面「关于」区域连续点击 5 次，进入 AnalyticsDashboardActivity | P0 |
+| MN-013 | Functional | V4.6.0 开发者仪表盘计时器重置 | 5 次点击间隔超过设定时间窗口未完成，计时器重置，需重新点击 5 次 | P1 |
 
 ---
 
@@ -243,9 +246,35 @@
 | TC-NEW-13 | Functional | 第 1142 条司法解释展示 | 第 1142 条显示【继承编解释（一）第38条】 | P0 |
 | TC-NEW-14 | Functional | 23 条增强法条展示 | 全部 23 条增强法条均显示具体条文编号 | P0 |
 
+### 11.4 V4.6.0 Developer Dashboard (开发者仪表盘)
+
+| Test ID | Category | Test Description | Expected Result | Priority |
+|---------|----------|-------------------|-----------------|----------|
+| AD-001 | Functional | 事件统计展示 | 仪表盘正确显示各事件类型实时计数 | P0 |
+| AD-002 | Functional | 最近 30 条事件日志 | 展示最近 30 条事件记录，含时间戳与参数 | P0 |
+| AD-003 | Functional | 复制 JSON | 点击「复制 JSON」按钮，完整报告复制到剪贴板 | P0 |
+| AD-004 | Functional | 分享报告 | 点击「分享报告」按钮，可分享至其他应用 | P0 |
+| AD-005 | Functional | 清空日志 | 点击「清空日志」按钮，事件日志被清空，界面更新 | P0 |
+| AD-006 | Functional | 导出完整报告 | exportFullReport() 生成的 JSON 含设备信息、事件计数、近期事件 | P0 |
+| AD-007 | Functional | GitHub Gist 上传（有效 token） | 输入有效 GitHub PAT 后，应用成功创建/更新私有 gist | P0 |
+| AD-008 | Functional | GitHub Gist 上传（无 token） | 未输入 token 时显示合理提示，不崩溃 | P1 |
+| AD-009 | Functional | GitHub Gist 上传（无效 token） | 无效 token 时显示错误提示 | P1 |
+| AD-010 | Functional | 广告状态面板 | 仪表盘正确展示各广告位启用/禁用状态 | P0 |
+
+### 11.5 V4.6.0 AdManager & Screen Tracking
+
+| Test ID | Category | Test Description | Expected Result | Priority |
+|---------|----------|-------------------|-----------------|----------|
+| AM-001 | Functional | AdManager 状态验证 | RemoteConfig 默认 ad_config 下，所有广告位为 OFF | P0 |
+| AM-002 | Functional | getAdConfig 返回 | RemoteConfig.getAdConfig() 返回完整 ad_config JSON | P0 |
+| AM-003 | Functional | 屏幕浏览追踪 Home | 进入首页时 logScreenView 被调用 | P0 |
+| AM-004 | Functional | 屏幕浏览追踪 Laws | 进入法律库时 logScreenView 被调用 | P0 |
+| AM-005 | Functional | 屏幕浏览追踪 Cases | 进入案例库时 logScreenView 被调用 | P0 |
+| AM-006 | Data Integrity | 事件日志上限 | 事件日志最多保留 500 条，超出时淘汰最旧记录 | P1 |
+
 ---
 
-## 12. Regression Test Suite (V4.1.0–V4.4.0)
+## 12. Regression Test Suite (V4.1.0–V4.6.0)
 
 | Test ID | Category | Test Description | Expected Result | Priority |
 |---------|----------|-------------------|-----------------|----------|
@@ -277,6 +306,8 @@
 | TC-REG-NEW-02 | Regression | V4.4.0 原有 30 个 FAQ 正常 | 原有 30 个 FAQ 仍正确加载并展示 | P0 |
 | TC-REG-NEW-03 | Regression | V4.4.0 搜索全内容类型 | 搜索仍可返回所有内容类型的结果 | P0 |
 | TC-REG-NEW-04 | Regression | V4.4.0 AI 助手内容数量 | AI 助手引用更新后的内容数量（25 主题、40 FAQ） | P0 |
+| TC-REG-NEW-05 | Regression | V4.6.0 开发者仪表盘隐藏 | 普通用户无法通过常规入口进入，仅 5 次点击关于可进入 | P0 |
+| TC-REG-NEW-06 | Regression | V4.6.0 无广告 SDK | 首版 APK 不含穿山甲/优量汇等广告 SDK，包体干净 | P0 |
 
 ---
 
@@ -288,14 +319,16 @@
 | Law Library | 4 | 5 | 1 | 11 |
 | Case Library | 15 | 4 | 0 | 19 |
 | Tools | 8 | 4 | 0 | 14 |
-| Mine | 8 | 2 | 0 | 10 |
+| Mine | 9 | 3 | 0 | 12 |
 | AI Chat | 8 | 4 | 1 | 15 |
 | Search | 8 | 3 | 1 | 13 |
 | Legal Glossary | 14 | 3 | 0 | 17 |
 | Global | 3 | 6 | 1 | 11 |
 | V4.4.0 Content Enhancement | 14 | 0 | 0 | 14 |
-| Regression | 28 | 0 | 0 | 28 |
-| **Total** | **114** | **36** | **4** | **154** |
+| V4.6.0 Developer Dashboard | 9 | 2 | 0 | 11 |
+| V4.6.0 AdManager & Screen Tracking | 5 | 1 | 0 | 6 |
+| Regression | 30 | 0 | 0 | 30 |
+| **Total** | **128** | **40** | **4** | **180** |
 
 ---
 
@@ -307,12 +340,14 @@
 - **P2**: 增强体验，可酌情延后
 
 ### 14.2 Recommended Execution Order
-1. P0 回归用例（RG-001 ~ RG-024, TC-REG-NEW-01 ~ TC-REG-NEW-04）
+1. P0 回归用例（RG-001 ~ RG-024, TC-REG-NEW-01 ~ TC-REG-NEW-06）
 2. V4.4.0 内容增强用例（TC-NEW-01 ~ TC-NEW-14）
-3. 各模块 P0 功能用例
-4. 全局 P0 用例（GL-001 ~ GL-003）
-5. P1 用例
-6. P2 用例
+3. V4.6.0 开发者仪表盘用例（AD-001 ~ AD-010）
+4. V4.6.0 AdManager 与屏幕追踪用例（AM-001 ~ AM-006）
+5. 各模块 P0 功能用例
+6. 全局 P0 用例（GL-001 ~ GL-003）
+7. P1 用例
+8. P2 用例
 
 ### 14.3 Defect Severity Mapping
 - 功能无法使用 → Critical
@@ -332,5 +367,5 @@
 
 ---
 
-*Document Version: 1.3*  
+*Document Version: 1.4*  
 *Last Updated: 2026-03-16*
