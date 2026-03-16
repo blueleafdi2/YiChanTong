@@ -1,0 +1,30 @@
+{
+  "announcement": {
+    "enabled": false,
+    "title": "",
+    "message": "",
+    "url": ""
+  },
+  "ad_config": {
+    "banner_enabled": false,
+    "interstitial_enabled": false,
+    "ad_unit_id": "",
+    "provider": ""
+  },
+  "contact": {
+    "wechat_id": "LawServicePro",
+    "phone": "12348"
+  },
+  "feature_flags": {
+    "ai_enabled": true,
+    "glossary_enabled": true,
+    "tools_enabled": true
+  },
+  "min_version": 1,
+  "latest_version": 12,
+  "update_url": "",
+  "custom_pages": {
+    "about_url": "",
+    "faq_url": ""
+  }
+}

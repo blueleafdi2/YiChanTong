@@ -62,7 +62,14 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
 
-        webView.setWebChromeClient(new WebChromeClient());
+        ProgressBar progressBar = findViewById(R.id.progress_bar);
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                progressBar.setProgress(newProgress);
+                progressBar.setVisibility(newProgress < 100 ? View.VISIBLE : View.GONE);
+            }
+        });
 
         if (htmlContent != null) {
             webView.loadDataWithBaseURL("https://flk.npc.gov.cn/", htmlContent, "text/html", "UTF-8", null);

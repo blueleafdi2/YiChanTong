@@ -34,6 +34,7 @@ public class CasesFragment extends Fragment {
     private String selectedProvince = null;
     private String selectedTag = null;
     private TextView caseCountText;
+    private View emptyState;
 
     @Nullable @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class CasesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         data = DataProvider.getInstance(requireContext());
         caseCountText = view.findViewById(R.id.case_count_text);
+        emptyState = view.findViewById(R.id.empty_state);
 
         RecyclerView rv = view.findViewById(R.id.cases_rv);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -164,6 +166,9 @@ public class CasesFragment extends Fragment {
         adapter.setItems(filtered);
         if (caseCountText != null) {
             caseCountText.setText("共 " + filtered.size() + " 件");
+        }
+        if (emptyState != null) {
+            emptyState.setVisibility(filtered.isEmpty() ? View.VISIBLE : View.GONE);
         }
     }
 }

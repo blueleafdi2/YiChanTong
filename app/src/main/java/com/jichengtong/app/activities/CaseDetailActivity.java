@@ -47,6 +47,7 @@ public class CaseDetailActivity extends AppCompatActivity {
 
         caseId = getIntent().getStringExtra("case_id");
         if (caseId == null) { finish(); return; }
+        com.jichengtong.app.utils.Analytics.getInstance(this).logContentView("case", caseId);
 
         CourtCase courtCase = DataProvider.getInstance(this).getCourtCaseById(caseId);
         if (courtCase == null) { finish(); return; }

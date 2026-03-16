@@ -88,6 +88,7 @@ public class SearchActivity extends AppCompatActivity {
                     return;
                 }
                 List<Object> results = data.search(currentQuery);
+                com.jichengtong.app.utils.Analytics.getInstance(SearchActivity.this).logSearch(currentQuery, results.size());
                 adapter.setItems(results);
                 if (results.isEmpty()) {
                     rv.setVisibility(View.GONE);

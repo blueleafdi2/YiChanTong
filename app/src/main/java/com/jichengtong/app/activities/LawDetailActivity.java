@@ -45,6 +45,7 @@ public class LawDetailActivity extends AppCompatActivity {
 
         lawId = getIntent().getStringExtra("law_id");
         if (lawId == null) { finish(); return; }
+        com.jichengtong.app.utils.Analytics.getInstance(this).logContentView("law", lawId);
 
         LawArticle law = DataProvider.getInstance(this).getLawArticleById(lawId);
         if (law == null) { finish(); return; }
