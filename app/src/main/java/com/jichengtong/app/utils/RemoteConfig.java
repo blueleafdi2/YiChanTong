@@ -106,6 +106,10 @@ public class RemoteConfig {
         catch (Exception e) { return ""; }
     }
 
+    public JSONObject getAdConfig() {
+        return config.optJSONObject("ad_config");
+    }
+
     public boolean isFeatureEnabled(String feature) {
         try { return config.optJSONObject("feature_flags") == null
                 || config.getJSONObject("feature_flags").optBoolean(feature, true); }

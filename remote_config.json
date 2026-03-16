@@ -6,10 +6,26 @@
     "url": ""
   },
   "ad_config": {
-    "banner_enabled": false,
-    "interstitial_enabled": false,
-    "ad_unit_id": "",
-    "provider": ""
+    "enabled": false,
+    "provider": "none",
+    "banner": {
+      "enabled": false,
+      "unit_id": ""
+    },
+    "interstitial": {
+      "enabled": false,
+      "unit_id": "",
+      "frequency_minutes": 30
+    },
+    "rewarded": {
+      "enabled": false,
+      "unit_id": ""
+    },
+    "native": {
+      "enabled": false,
+      "unit_id": ""
+    },
+    "new_user_ad_free_days": 3
   },
   "contact": {
     "wechat_id": "LawServicePro",
@@ -21,7 +37,7 @@
     "tools_enabled": true
   },
   "min_version": 1,
-  "latest_version": 12,
+  "latest_version": 13,
   "update_url": "",
   "custom_pages": {
     "about_url": "",

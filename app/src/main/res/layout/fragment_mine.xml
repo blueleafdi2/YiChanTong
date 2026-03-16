@@ -153,7 +153,7 @@
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:text="关于「遗产通」" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text_primary" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"
-                    android:text="版本 4.5.0\n内容更新至2026年3月\n\n遗产通致力于让每一位中国公民都能看得懂、查得到、用得上遗产继承相关法律知识。\n\n数据来源：\n• 全国人民代表大会官网（flk.npc.gov.cn）\n• 中国裁判文书网（wenshu.court.gov.cn）\n• 人民法院案例库（rmfyalk.court.gov.cn）\n• 最高人民法院公报（gongbao.court.gov.cn）\n• 北大法宝（pkulaw.com）\n• 中国法院网（chinacourt.org）"
+                    android:text="版本 4.6.0\n内容更新至2026年3月\n\n遗产通致力于让每一位中国公民都能看得懂、查得到、用得上遗产继承相关法律知识。\n\n数据来源：\n• 全国人民代表大会官网（flk.npc.gov.cn）\n• 中国裁判文书网（wenshu.court.gov.cn）\n• 人民法院案例库（rmfyalk.court.gov.cn）\n• 最高人民法院公报（gongbao.court.gov.cn）\n• 北大法宝（pkulaw.com）\n• 中国法院网（chinacourt.org）"
                     android:textSize="13sp" android:textColor="@color/text_secondary" android:lineSpacingMultiplier="1.4" />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_privacy_policy"
