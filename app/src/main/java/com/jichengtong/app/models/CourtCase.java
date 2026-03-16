@@ -19,6 +19,7 @@ public class CourtCase {
     private List<String> legalBasis;
     private String rulingGist;
     private String source;
+    private String sourceUrl;
 
     // Getters
     public String getId() { return id; }
@@ -37,4 +38,5 @@ public class CourtCase {
     public List<String> getLegalBasis() { return legalBasis; }
     public String getRulingGist() { return rulingGist; }
     public String getSource() { return source; }
+    public String getSourceUrl() { return sourceUrl; }
 }

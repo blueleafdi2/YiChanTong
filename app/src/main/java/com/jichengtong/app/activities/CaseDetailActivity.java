@@ -92,7 +92,24 @@ public class CaseDetailActivity extends AppCompatActivity {
             LawLinkHelper.enableLinkClicks(legalBasisTv);
         }
         ((TextView) findViewById(R.id.case_ruling_gist)).setText(courtCase.getRulingGist());
-        ((TextView) findViewById(R.id.case_source)).setText("来源：" + courtCase.getSource());
+
+        String sourceText = "来源：" + courtCase.getSource() + "\n案号：" + courtCase.getCaseNumber();
+        if (courtCase.getSourceUrl() != null) {
+            sourceText += "\n网址：" + courtCase.getSourceUrl();
+        }
+        ((TextView) findViewById(R.id.case_source)).setText(sourceText);
+
+        MaterialButton btnSource = findViewById(R.id.btn_view_source);
+        if (courtCase.getSourceUrl() != null && !courtCase.getSourceUrl().isEmpty()) {
+            btnSource.setOnClickListener(v -> {
+                Intent webIntent = new Intent(this, WebViewActivity.class);
+                webIntent.putExtra("html_content", generateSourceHtml(courtCase));
+                webIntent.putExtra("title", courtCase.getSource() + " - 官方来源");
+                startActivity(webIntent);
+            });
+        } else {
+            btnSource.setVisibility(View.GONE);
+        }
 
         MaterialButton btnCollect = findViewById(R.id.btn_collect);
         updateFavButton(btnCollect);
@@ -130,6 +147,54 @@ public class CaseDetailActivity extends AppCompatActivity {
 
     private void updateFavButton(MaterialButton btn) {
         btn.setText(favMgr.isFavorite("case", caseId) ? "★ 已收藏" : "☆ 收藏");
+    }
+
+    private String generateSourceHtml(CourtCase c) {
+        String url = c.getSourceUrl() != null ? c.getSourceUrl() : "";
+        String searchUrl = url;
+        if (url.contains("wenshu.court.gov.cn")) {
+            searchUrl = "https://wenshu.court.gov.cn/website/wenshu/181107ANFZ0BXSK4/index.html?docId=" + c.getCaseNumber();
+        }
+        return "<!DOCTYPE html><html><head><meta charset='utf-8'>" +
+            "<meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'>" +
+            "<style>" +
+            "body{font-family:-apple-system,sans-serif;margin:0;padding:16px;background:#FFFDE7;color:#212121;font-size:16px;line-height:1.6;}" +
+            ".header{background:#E65100;color:white;padding:16px;border-radius:12px;margin-bottom:16px;}" +
+            ".header h2{margin:0 0 8px 0;font-size:18px;}" +
+            ".header p{margin:4px 0;font-size:13px;opacity:0.9;}" +
+            ".info-box{background:white;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.1);}" +
+            ".info-box h3{margin:0 0 8px 0;font-size:16px;color:#1B5E20;}" +
+            ".info-row{display:flex;margin:6px 0;font-size:14px;}" +
+            ".info-label{color:#666;min-width:70px;}" +
+            ".info-value{color:#333;font-weight:500;}" +
+            ".btn{display:block;text-align:center;padding:16px;border-radius:10px;margin:8px 0;text-decoration:none;font-size:16px;font-weight:bold;}" +
+            ".btn-primary{background:#1B5E20;color:white;}" +
+            ".btn-secondary{background:#E65100;color:white;}" +
+            ".note{background:#FFF3E0;padding:12px 16px;border-radius:8px;margin-top:16px;font-size:13px;color:#E65100;line-height:1.6;}" +
+            ".footer{text-align:center;color:#999;font-size:12px;margin-top:16px;}" +
+            "</style></head><body>" +
+            "<div class='header'>" +
+            "<h2>🔗 " + c.getSource() + "</h2>" +
+            "<p>案号：" + c.getCaseNumber() + "</p>" +
+            "<p>法院：" + c.getCourt() + "</p>" +
+            "</div>" +
+            "<div class='info-box'>" +
+            "<h3>📋 案件信息</h3>" +
+            "<div class='info-row'><span class='info-label'>案件名称</span><span class='info-value'>" + c.getTitle() + "</span></div>" +
+            "<div class='info-row'><span class='info-label'>审判日期</span><span class='info-value'>" + c.getJudgeDate() + "</span></div>" +
+            "<div class='info-row'><span class='info-label'>案件类型</span><span class='info-value'>" + c.getCaseType() + "</span></div>" +
+            "<div class='info-row'><span class='info-label'>数据来源</span><span class='info-value'>" + c.getSource() + "</span></div>" +
+            "</div>" +
+            "<a class='btn btn-primary' href='" + url + "'>前往 " + c.getSource() + " 官网 ›</a>" +
+            "<a class='btn btn-secondary' href='" + searchUrl + "'>搜索本案裁判文书 ›</a>" +
+            "<div class='note'>" +
+            "💡 <strong>温馨提示</strong><br/>" +
+            "• 部分裁判文书需在官网注册后查看全文<br/>" +
+            "• 可在官网搜索栏输入案号「" + c.getCaseNumber() + "」查找<br/>" +
+            "• 如遇页面加载缓慢，建议使用浏览器直接访问官网" +
+            "</div>" +
+            "<div class='footer'>本案例数据摘录自公开司法裁判文书<br/>以官方数据库原文为准</div>" +
+            "</body></html>";
     }
 
     private String chineseToArticleId(String chinese) {

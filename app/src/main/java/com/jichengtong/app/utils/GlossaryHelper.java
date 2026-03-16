@@ -74,25 +74,23 @@ public class GlossaryHelper {
 
         for (Map.Entry<String, GlossaryItem> entry : termMap.entrySet()) {
             String term = entry.getKey();
-            if (term.length() < 2) continue;
+            if (term.length() < 3) continue;
             GlossaryItem g = entry.getValue();
-            if (!"hard".equals(g.getDifficulty()) && !"medium".equals(g.getDifficulty())) continue;
+            if (!"hard".equals(g.getDifficulty())) continue;
 
             int idx = text.indexOf(term);
-            while (idx >= 0) {
-                final GlossaryItem glossaryItem = g;
-                ssb.setSpan(new ClickableSpan() {
-                    @Override public void onClick(@NonNull View widget) {
-                        showTermDialog(widget.getContext(), glossaryItem);
-                    }
-                    @Override public void updateDrawState(@NonNull TextPaint ds) {
-                        ds.setColor(0xFF6A1B9A);
-                        ds.setUnderlineText(false);
-                        ds.setFakeBoldText(false);
-                    }
-                }, idx, idx + term.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                idx = text.indexOf(term, idx + term.length());
-            }
+            if (idx < 0) continue;
+            final GlossaryItem glossaryItem = g;
+            ssb.setSpan(new ClickableSpan() {
+                @Override public void onClick(@NonNull View widget) {
+                    showTermDialog(widget.getContext(), glossaryItem);
+                }
+                @Override public void updateDrawState(@NonNull TextPaint ds) {
+                    ds.setColor(0xFF6A1B9A);
+                    ds.setUnderlineText(false);
+                    ds.setFakeBoldText(false);
+                }
+            }, idx, idx + term.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return ssb;
     }

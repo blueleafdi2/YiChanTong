@@ -257,14 +257,49 @@
                     style="@style/Widget.Material3.Button.OutlinedButton" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/case_source"
+            <!-- Official Source -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/source_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="11sp"
-                android:textColor="@color/text_hint"
-                android:gravity="center" />
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="1dp"
+                app:cardBackgroundColor="#FFFDE7">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔗 官方来源"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="#F57F17" />
+
+                    <TextView
+                        android:id="@+id/case_source"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_secondary"
+                        android:lineSpacingMultiplier="1.4" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_view_source"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="查看官方来源 ›"
+                        app:icon="@drawable/ic_arrow_right"
+                        app:iconGravity="end" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

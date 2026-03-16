@@ -22,6 +22,7 @@ import com.jichengtong.app.adapters.CaseAdapter;
 import com.jichengtong.app.data.DataProvider;
 import com.jichengtong.app.models.CourtCase;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -155,6 +156,11 @@ public class CasesFragment extends Fragment {
             if (selectedTag != null && (c.getTags() == null || !c.getTags().contains(selectedTag))) continue;
             filtered.add(c);
         }
+        Collections.sort(filtered, (a, b) -> {
+            String da = a.getJudgeDate() != null ? a.getJudgeDate() : "";
+            String db = b.getJudgeDate() != null ? b.getJudgeDate() : "";
+            return db.compareTo(da);
+        });
         adapter.setItems(filtered);
         if (caseCountText != null) {
             caseCountText.setText("共 " + filtered.size() + " 件");

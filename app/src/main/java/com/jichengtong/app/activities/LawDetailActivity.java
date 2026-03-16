@@ -158,25 +158,23 @@ public class LawDetailActivity extends AppCompatActivity {
     private SpannableStringBuilder highlightWithGlossary(String text, List<String> keywords) {
         SpannableStringBuilder sb = highlightKeywords(text, keywords);
         DataProvider dp = DataProvider.getInstance(this);
+        String str = sb.toString();
         for (GlossaryItem g : dp.getGlossary()) {
-            if (g.getTerm().length() < 2) continue;
-            if (!"hard".equals(g.getDifficulty()) && !"medium".equals(g.getDifficulty())) continue;
             String term = g.getTerm();
-            String str = sb.toString();
+            if (term.length() < 3) continue;
+            if (!"hard".equals(g.getDifficulty())) continue;
             int idx = str.indexOf(term);
-            while (idx >= 0) {
-                final GlossaryItem item = g;
-                sb.setSpan(new ClickableSpan() {
-                    @Override public void onClick(@NonNull View w) {
-                        GlossaryHelper.showTermDialog(LawDetailActivity.this, item);
-                    }
-                    @Override public void updateDrawState(@NonNull TextPaint ds) {
-                        ds.setColor(0xFF6A1B9A);
-                        ds.setUnderlineText(true);
-                    }
-                }, idx, idx + term.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                idx = str.indexOf(term, idx + term.length());
-            }
+            if (idx < 0) continue;
+            final GlossaryItem item = g;
+            sb.setSpan(new ClickableSpan() {
+                @Override public void onClick(@NonNull View w) {
+                    GlossaryHelper.showTermDialog(LawDetailActivity.this, item);
+                }
+                @Override public void updateDrawState(@NonNull TextPaint ds) {
+                    ds.setColor(0xFF6A1B9A);
+                    ds.setUnderlineText(true);
+                }
+            }, idx, idx + term.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return sb;
     }

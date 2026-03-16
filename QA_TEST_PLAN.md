@@ -1,8 +1,8 @@
 # 遗产通 (Inheritance Law App) QA Test Plan
 
-**Version:** 4.3.0  
+**Version:** 4.3.1  
 **Platform:** Android  
-**Document Date:** 2026-03-15  
+**Document Date:** 2026-03-16  
 **Language:** 中文 (Section Headers in English)
 
 ---
@@ -10,13 +10,14 @@
 ## 1. Document Overview
 
 ### 1.1 Purpose
-本文档为遗产通 Android 继承法应用提供全面的质量保证测试计划，覆盖所有功能模块、边界条件、UI/UX 验证及 V4.1.0–V4.3.0 回归测试项。
+本文档为遗产通 Android 继承法应用提供全面的质量保证测试计划，覆盖所有功能模块、边界条件、UI/UX 验证及 V4.1.0–V4.3.1 回归测试项。
 
 ### 1.2 Scope
 - 首页、法律库、案例库、工具箱、我的、AI 聊天、全局搜索、法律词典、全局导航与法条链接
 - V4.1.0 变更：AI 链接修复、对话持久化、搜索栏、工具法条链接、Word 导出
 - V4.2.0 变更：AI 流式优化、搜索空状态、案例标签 ChipGroup、Word 中文字体、案例库扩展至 390 个
 - V4.3.0 变更：法律词典（125 术语）、GlossaryActivity、术语高亮与弹窗、GlossaryHelper
+- V4.3.1 变更：案例时间倒序、官方来源卡片与 WebView、sourceUrl 覆盖、Mine 版本号与数据源更新、AI 错误提示更新
 
 ### 1.3 Test Environment
 - Android 设备/模拟器（建议覆盖 API 21–34）
@@ -77,6 +78,13 @@
 | CL-010 | Edge Case | 无筛选结果 | 筛选无结果时显示友好提示，不崩溃 | P1 |
 | CL-011 | Edge Case | 案例详情内无效法条引用 | 无效引用不导致崩溃，有兜底处理 | P1 |
 | CL-012 | UI/UX | 案例列表分页/加载更多 | 列表支持分页或无限滚动，加载流畅 | P1 |
+| CL-013 | Functional | 案例时间倒序排列 | 案例列表默认按审判日期倒序（最新在前），2026-03 案例显示在最前 | P0 |
+| CL-014 | Data Integrity | 无未来日期案例 | 所有案例 judgeDate 不超过当前日期（2026-03），不存在 2026-04 及之后的案例 | P0 |
+| CL-015 | Functional | 官方来源卡片展示 | 案例详情底部显示「🔗 官方来源」卡片，含来源名称、案号、官方网址 | P0 |
+| CL-016 | Functional | 查看官方来源 WebView | 点击「查看官方来源」按钮，进入 WebView 页面，显示案件信息+官网跳转按钮+温馨提示，无缩放问题 | P0 |
+| CL-017 | Data Integrity | 5 种来源 URL 正确 | 中国裁判文书网→wenshu.court.gov.cn, 北大法宝→pkulaw.com, 人民法院案例库→rmfyalk.court.gov.cn, 中国法院网→chinacourt.org, 最高人民法院公报→gongbao.court.gov.cn | P0 |
+| CL-018 | Data Integrity | sourceUrl 字段覆盖 | 所有 390 个案例均有 sourceUrl 字段 | P0 |
+| CL-019 | Data Integrity | 案号与日期一致性 | 案号中的年份与 judgeDate 年份一致 | P0 |
 
 ---
 
@@ -114,6 +122,8 @@
 | MN-007 | Data Integrity | 收藏/笔记/历史持久化 | 应用重启后收藏、笔记、阅读历史不丢失 | P0 |
 | MN-008 | Edge Case | 空收藏/笔记/历史 | 无数据时显示空状态提示，不崩溃 | P1 |
 | MN-009 | UI/UX | 我的页面布局 | 各入口清晰可点击，无遮挡 | P1 |
+| MN-010 | Functional | 版本号和数据源更新 | 「我的」关于页面显示版本 4.3.1，不含硬编码案例数量，数据来源列表完整（6 个官网含域名） | P0 |
+| MN-011 | Functional | AI 错误提示更新 | AI 余额不足时提示信息中案例数显示 390+ 而非 210+ | P0 |
 
 ---
 
@@ -201,7 +211,7 @@
 
 ---
 
-## 11. Regression Test Suite (V4.1.0–V4.3.0)
+## 11. Regression Test Suite (V4.1.0–V4.3.1)
 
 | Test ID | Category | Test Description | Expected Result | Priority |
 |---------|----------|-------------------|-----------------|----------|
@@ -222,6 +232,13 @@
 | RG-015 | Regression | 法律词典术语弹窗全流程 | 法律库、案例库、工具箱中术语点击可弹出 GlossaryHelper 对话框 | P0 |
 | RG-016 | Regression | 法律库术语高亮一致性 | 法律详情中 medium/hard 术语在白话解读、生活案例、法律原文中显示紫色下划线 | P0 |
 | RG-017 | Regression | 案例库标签词典关联 | 案例详情标签匹配词典术语时显示 ? 图标，点击可弹出术语解释 | P0 |
+| RG-018 | Regression | V4.3.1 案例倒序排列 | 案例库列表按时间倒序显示 | P0 |
+| RG-019 | Regression | V4.3.1 无未来日期案例 | 无 2026-04 及之后日期的案例 | P0 |
+| RG-020 | Regression | V4.3.1 官方来源 WebView | 案例详情「查看官方来源」功能正常 | P0 |
+| RG-021 | Regression | V4.3.1 Mine 页面无硬编码案例数 | 「我的」关于页面不含「210+」 | P0 |
+| RG-022 | Regression | V4.3.1 法律词典无 ANR | 法律词典功能正常使用无卡顿 | P0 |
+| RG-023 | Regression | V4.3.1 案例标签词典关联 | 标签匹配词典术语时显示 ? 图标并可点击 | P0 |
+| RG-024 | Regression | V4.3.1 法律详情术语高亮 | 仅 hard 难度术语高亮，无 ANR | P0 |
 
 ---
 
@@ -231,15 +248,15 @@
 |----------|----|----|----|-------|
 | Home Page | 5 | 5 | 0 | 11 |
 | Law Library | 4 | 5 | 1 | 11 |
-| Case Library | 7 | 4 | 0 | 12 |
+| Case Library | 15 | 4 | 0 | 19 |
 | Tools | 8 | 4 | 0 | 14 |
-| Mine | 6 | 2 | 0 | 9 |
+| Mine | 8 | 2 | 0 | 10 |
 | AI Chat | 8 | 4 | 1 | 15 |
 | Search | 8 | 3 | 1 | 13 |
 | Legal Glossary | 14 | 3 | 0 | 17 |
 | Global | 3 | 6 | 1 | 11 |
-| Regression | 17 | 0 | 0 | 17 |
-| **Total** | **80** | **36** | **4** | **130** |
+| Regression | 24 | 0 | 0 | 24 |
+| **Total** | **96** | **36** | **4** | **136** |
 
 ---
 
@@ -251,7 +268,7 @@
 - **P2**: 增强体验，可酌情延后
 
 ### 13.2 Recommended Execution Order
-1. P0 回归用例（RG-001 ~ RG-017）
+1. P0 回归用例（RG-001 ~ RG-024）
 2. 各模块 P0 功能用例
 3. 全局 P0 用例（GL-001 ~ GL-003）
 4. P1 用例
@@ -275,5 +292,5 @@
 
 ---
 
-*Document Version: 1.1*  
-*Last Updated: 2026-03-15*
+*Document Version: 1.2*  
+*Last Updated: 2026-03-16*
