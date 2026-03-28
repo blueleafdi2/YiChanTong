@@ -1,0 +1,82 @@
+<view class="page" wx:if="{{!notFound && item}}">
+  <view class="hero card">
+    <view class="hero-top">
+      <view class="hero-meta caption">{{item.court}} · {{item.judgeDate}}</view>
+      <view class="fav-btn" bindtap="onToggleFavorite" hover-class="fav-btn--hover">
+        <text class="fav-icon">{{favorited ? '★' : '☆'}}</text>
+      </view>
+    </view>
+    <text class="hero-title">{{item.title}}</text>
+    <text class="case-no mini" wx:if="{{item.caseNumber}}">{{item.caseNumber}}</text>
+  </view>
+
+  <view class="section px">
+    <view class="tag-row flex-wrap">
+      <text class="tag tag-accent" wx:if="{{item.caseType}}">{{item.caseType}}</text>
+      <text class="tag" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="section px" wx:if="{{item.caseSummary}}">
+    <view class="section-title">案件摘要</view>
+    <view class="body-text card-flat">{{item.caseSummary}}</view>
+  </view>
+
+  <view class="section px" wx:if="{{item.disputeFocus}}">
+    <view class="section-title">争议焦点</view>
+    <view class="body-text card-flat">{{item.disputeFocus}}</view>
+  </view>
+
+  <view class="section px" wx:if="{{item.judgment}}">
+    <view class="section-title">裁判结果</view>
+    <view class="body-text card-flat emphasis">{{item.judgment}}</view>
+  </view>
+
+  <view class="section px" wx:if="{{item.rulingGist}}">
+    <view class="section-title">裁判要旨</view>
+    <view class="body-text card-flat">{{item.rulingGist}}</view>
+  </view>
+
+  <view class="section px" wx:if="{{legalBasisItems.length}}">
+    <view class="section-title">法律依据</view>
+    <view class="basis-list">
+      <view
+        class="basis-item {{it.lawId ? 'basis-item--link' : ''}}"
+        wx:for="{{legalBasisItems}}"
+        wx:for-item="it"
+        wx:key="text"
+        data-lawid="{{it.lawId}}"
+        bindtap="onLawBasisTap"
+      >
+        <text>{{it.text}}</text>
+        <text class="chev" wx:if="{{it.lawId}}">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section px source-block">
+    <view class="section-title">来源</view>
+    <view class="card-flat source-row">
+      <text class="source-name">{{item.source || '—'}}</text>
+      <button class="link-btn" wx:if="{{item.sourceUrl}}" bindtap="onOpenSource">复制链接</button>
+    </view>
+  </view>
+
+  <view class="action-bar px">
+    <view class="action-btn" bindtap="onToggleFavorite">
+      <text class="action-icon">{{favorited ? '★' : '☆'}}</text>
+      <text class="action-label">{{favorited ? '已收藏' : '收藏'}}</text>
+    </view>
+    <view class="action-btn" bindtap="onAddNote">
+      <text class="action-icon">📝</text>
+      <text class="action-label">记笔记</text>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
+
+<view class="empty-state" wx:if="{{notFound}}">
+  <text class="icon">⚖️</text>
+  <text class="text">未找到该案例</text>
+</view>

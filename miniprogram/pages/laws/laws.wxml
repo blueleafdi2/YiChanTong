@@ -1,0 +1,38 @@
+<view class="page">
+  <scroll-view class="tab-bar" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="tab-inner">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="*this"
+        class="tab-pill {{tabIndex === index ? 'active' : ''}}"
+        data-index="{{index}}"
+        bindtap="onTabTap"
+      >
+        {{item}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <scroll-view class="list-scroll" scroll-y enhanced>
+    <view
+      wx:for="{{lawList}}"
+      wx:key="id"
+      class="law-card"
+      data-id="{{item.id}}"
+      bindtap="onLawTap"
+    >
+      <view class="law-card-top">
+        <text class="law-article">{{item.articleLabel}}</text>
+        <text class="law-title">{{item.title}}</text>
+      </view>
+      <view class="law-tags" wx:if="{{item.tagPreview.length}}">
+        <text wx:for="{{item.tagPreview}}" wx:for-item="tag" wx:key="*this" class="law-tag">{{tag}}</text>
+      </view>
+    </view>
+    <view wx:if="{{!lawList.length}}" class="empty-state">
+      <text class="empty-icon">📖</text>
+      <text class="empty-text">暂无法条数据</text>
+    </view>
+    <view class="safe-bottom"></view>
+  </scroll-view>
+</view>

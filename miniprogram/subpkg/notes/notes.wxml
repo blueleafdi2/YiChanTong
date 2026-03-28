@@ -1,0 +1,25 @@
+<view class="page">
+  <scroll-view scroll-y class="scroll">
+    <view
+      class="row card"
+      wx:for="{{list}}"
+      wx:key="uid"
+      data-index="{{index}}"
+      bindtap="onRowTap"
+      hover-class="row--hover"
+    >
+      <view class="row-top flex-between">
+        <text class="type-badge type-{{item.type}}">{{item.type}}</text>
+        <text class="mini time">{{item.timeLabel}}</text>
+      </view>
+      <text class="row-title">{{item.title}}</text>
+      <text class="preview caption">{{item.preview}}</text>
+    </view>
+
+    <view class="empty-state" wx:if="{{!list.length}}">
+      <text class="icon">📝</text>
+      <text class="text">还没有笔记，在内容页添加笔记后会显示在这里</text>
+    </view>
+    <view class="safe-bottom"></view>
+  </scroll-view>
+</view>

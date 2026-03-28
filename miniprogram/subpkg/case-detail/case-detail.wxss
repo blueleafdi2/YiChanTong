@@ -1,0 +1,136 @@
+.page {
+  padding-bottom: 40rpx;
+}
+
+.hero {
+  margin: 24rpx;
+}
+
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.hero-meta {
+  flex: 1;
+  color: var(--text-secondary);
+}
+
+.fav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 16rpx;
+  background: rgba(198, 156, 109, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.fav-btn--hover {
+  opacity: 0.85;
+}
+
+.fav-icon {
+  font-size: 40rpx;
+  color: var(--gold);
+}
+
+.hero-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1.45;
+  display: block;
+}
+
+.case-no {
+  display: block;
+  margin-top: 12rpx;
+  color: var(--text-hint);
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.body-text {
+  font-size: 28rpx;
+  line-height: 1.75;
+  color: var(--text-primary);
+}
+
+.body-text.emphasis {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.basis-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.basis-item {
+  background: var(--surface);
+  border-radius: 16rpx;
+  border: 1rpx solid var(--border);
+  padding: 20rpx 24rpx;
+  font-size: 26rpx;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.basis-item--link {
+  border-color: rgba(43, 95, 138, 0.35);
+  color: var(--primary);
+}
+
+.basis-item--link .chev {
+  font-size: 36rpx;
+  color: var(--gold);
+  margin-left: 12rpx;
+}
+
+.px {
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+}
+
+.source-block {
+  margin-bottom: 24rpx;
+}
+
+.source-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.source-name {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.link-btn {
+  margin: 0;
+  padding: 0 24rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 24rpx;
+  color: var(--primary);
+  background: rgba(43, 95, 138, 0.08);
+  border-radius: 16rpx;
+  border: none;
+}
+
+.link-btn::after {
+  border: none;
+}

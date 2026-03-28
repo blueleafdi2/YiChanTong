@@ -1,0 +1,97 @@
+.page {
+  padding-bottom: 40rpx;
+}
+
+.hero {
+  margin: 24rpx;
+  position: relative;
+}
+
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.chapter-badge {
+  font-size: 22rpx;
+  color: var(--primary);
+  background: rgba(43, 95, 138, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  max-width: 75%;
+  line-height: 1.4;
+}
+
+.fav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 16rpx;
+  background: rgba(198, 156, 109, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.fav-btn--hover {
+  opacity: 0.85;
+}
+
+.fav-icon {
+  font-size: 40rpx;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.hero-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.45;
+  display: block;
+}
+
+.tag-gold {
+  background: rgba(198, 156, 109, 0.25);
+  color: var(--primary-dark);
+  font-weight: 500;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.body-text {
+  font-size: 28rpx;
+  line-height: 1.75;
+  color: var(--text-primary);
+}
+
+.body-text.muted {
+  color: var(--text-secondary);
+}
+
+.original-card {
+  background: var(--surface);
+  border: 2rpx solid var(--border);
+  border-radius: 16rpx;
+  padding: 28rpx;
+  box-shadow: var(--shadow);
+}
+
+.original-text {
+  font-family: "Songti SC", "STSong", "SimSun", serif;
+  font-size: 28rpx;
+  line-height: 2;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+
+.px {
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+}

@@ -1,0 +1,49 @@
+<view class="page">
+  <view class="search-wrap">
+    <text class="icon">⌕</text>
+    <input
+      type="text"
+      placeholder="搜索术语或释义"
+      value="{{search}}"
+      bindinput="onSearchInput"
+      confirm-type="search"
+    />
+  </view>
+
+  <scroll-view class="cat-scroll" scroll-x enable-flex>
+    <view
+      class="cat-chip {{categoryFilter === item ? 'active' : ''}}"
+      wx:for="{{categoryTabs}}"
+      wx:key="*this"
+      data-cat="{{item}}"
+      bindtap="onCategoryTap"
+    >{{item}}</view>
+  </scroll-view>
+
+  <view class="count-tip caption px">共 {{allCount}} 条术语 · 当前显示 {{list.length}} 条</view>
+
+  <view class="list">
+    <view
+      class="term-card card"
+      wx:for="{{list}}"
+      wx:key="term"
+      data-term="{{item.term}}"
+      bindtap="onTermTap"
+      hover-class="term-card--hover"
+    >
+      <view class="term-head flex-between">
+        <text class="term-name">{{item.term}}</text>
+        <text class="term-badge">{{item.badge}}</text>
+      </view>
+      <text class="term-cat mini">{{item.category}}</text>
+      <text class="term-preview caption">{{item.preview}}</text>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{!list.length}}">
+    <text class="icon">📖</text>
+    <text class="text">没有匹配的术语</text>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

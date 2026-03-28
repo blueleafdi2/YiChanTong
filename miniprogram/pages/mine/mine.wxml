@@ -1,0 +1,55 @@
+<view class="page safe-bottom">
+  <view class="user-card">
+    <view class="avatar-wrap">
+      <text class="avatar-placeholder">遗</text>
+    </view>
+    <view class="user-meta">
+      <text class="user-name">遗产通用户</text>
+      <text class="user-desc">本地学习 · 无需登录</text>
+    </view>
+  </view>
+
+  <view class="menu-card">
+    <view class="menu-item" data-url="/subpkg/favorites/favorites" bindtap="onMenuTap">
+      <text class="menu-icon">⭐</text>
+      <text class="menu-title">我的收藏</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider" />
+    <view class="menu-item" data-url="/subpkg/notes/notes" bindtap="onMenuTap">
+      <text class="menu-icon">📝</text>
+      <text class="menu-title">我的笔记</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider" />
+    <view class="menu-item" data-url="/subpkg/history/history" bindtap="onMenuTap">
+      <text class="menu-icon">📖</text>
+      <text class="menu-title">浏览历史</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider" />
+    <view class="menu-item" data-url="/subpkg/contact/contact" bindtap="onMenuTap">
+      <text class="menu-icon">📞</text>
+      <text class="menu-title">联系我们</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="about-card">
+    <text class="about-title">关于「遗产通」</text>
+    <text class="about-version">版本 1.0.0</text>
+    <text class="about-body">中国遗产继承法律百科小程序</text>
+    <text class="about-stats">390+全国法院真实判例 · 45条民法典继承编 · 125个法律术语</text>
+    <view class="about-divider" />
+    <text class="about-sources-title">数据来源</text>
+    <view class="source-list">
+      <text class="source-line">· 《中华人民共和国民法典》继承编及司法解释</text>
+      <text class="source-line">· 中国裁判文书网公开裁判文书（节选整理）</text>
+      <text class="source-line">· 法律术语释义由编者根据公开资料整理，仅供参考</text>
+    </view>
+  </view>
+
+  <view class="privacy-wrap">
+    <text class="privacy-btn" bindtap="onPrivacyTap">《隐私政策》</text>
+  </view>
+</view>

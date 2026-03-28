@@ -1,0 +1,79 @@
+<view class="page" wx:if="{{!notFound && (topic || faq)}}">
+  <view class="hero card" wx:if="{{mode === 'topic'}}">
+    <view class="hero-top">
+      <text class="topic-icon">{{topic.icon}}</text>
+      <view class="fav-btn" bindtap="onToggleFavorite" hover-class="fav-btn--hover">
+        <text class="fav-icon">{{favorited ? '★' : '☆'}}</text>
+      </view>
+    </view>
+    <text class="hero-title">{{topic.title}}</text>
+    <text class="desc caption" wx:if="{{topic.description}}">{{topic.description}}</text>
+  </view>
+
+  <view class="hero card" wx:if="{{mode === 'faq'}}">
+    <view class="hero-top">
+      <view class="faq-badge">FAQ</view>
+      <view class="fav-btn" bindtap="onToggleFavorite" hover-class="fav-btn--hover">
+        <text class="fav-icon">{{favorited ? '★' : '☆'}}</text>
+      </view>
+    </view>
+    <text class="hero-title">{{faq.question}}</text>
+    <view class="tag-row flex-wrap mt-md" wx:if="{{faq.tags && faq.tags.length}}">
+      <text class="tag tag-gold" wx:for="{{faq.tags}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="section px">
+    <view class="section-title">{{mode === 'faq' ? '解答' : '正文'}}</view>
+    <view class="body-text card-flat content-block">
+      <block wx:for="{{contentParts}}" wx:key="index">
+        <text
+          wx:if="{{item.isLink}}"
+          class="law-ref"
+          data-lawid="{{item.lawId}}"
+          catchtap="onLawRefTap"
+        >{{item.text}}</text>
+        <text wx:else>{{item.text}}</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="section px" wx:if="{{relatedLaws.length}}">
+    <view class="section-title">相关法条</view>
+    <view class="chip-list">
+      <view
+        class="chip {{it.lawId ? 'chip--law' : ''}}"
+        wx:for="{{relatedLaws}}"
+        wx:for-item="it"
+        wx:key="text"
+        data-lawid="{{it.lawId}}"
+        bindtap="onRelatedLawTap"
+      >
+        {{it.text}}
+      </view>
+    </view>
+  </view>
+
+  <view class="section px" wx:if="{{mode === 'topic' && relatedCases.length}}">
+    <view class="section-title">相关案例</view>
+    <view class="case-links">
+      <view
+        class="case-link"
+        wx:for="{{relatedCases}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onCaseTap"
+      >
+        <text class="case-link-text">{{item.title}}</text>
+        <text class="chev">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
+
+<view class="empty-state" wx:if="{{notFound}}">
+  <text class="icon">📚</text>
+  <text class="text">内容不存在或已下架</text>
+</view>

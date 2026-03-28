@@ -1,0 +1,59 @@
+<view class="page safe-bottom">
+  <view class="search-header">
+    <view class="search-bar">
+      <text class="search-bar-icon" aria-hidden="true">🔍</text>
+      <input
+        class="search-input"
+        type="text"
+        confirm-type="search"
+        placeholder="搜索法条、案例、问答、专题、术语"
+        placeholder-class="search-ph"
+        value="{{query}}"
+        focus="{{autoFocus}}"
+        bindinput="onQueryInput"
+        bindconfirm="onQueryConfirm"
+      />
+    </view>
+  </view>
+
+  <view wx:if="{{showHot}}" class="hot-section">
+    <text class="hot-title">热门搜索</text>
+    <view class="hot-grid">
+      <view
+        wx:for="{{hotKeywords}}"
+        wx:key="*this"
+        class="hot-chip"
+        data-kw="{{item}}"
+        bindtap="onHotTap"
+      >
+        <text>{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!showHot && results.length > 0}}" class="result-list">
+    <view
+      wx:for="{{results}}"
+      wx:key="type-{{item.type}}-{{item.id}}"
+      class="result-card"
+      data-type="{{item.type}}"
+      data-id="{{item.id}}"
+      bindtap="onResultTap"
+    >
+      <view class="result-top">
+        <text class="badge badge-{{item.type}}">{{item.badgeLabel}}</text>
+      </view>
+      <text class="result-title">{{item.title}}</text>
+      <text wx:if="{{item.subtitle}}" class="result-sub">{{item.subtitle}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{showEmpty}}" class="empty-block">
+    <text class="empty-icon" aria-hidden="true">📭</text>
+    <text class="empty-text">未找到相关结果，换个关键词试试</text>
+  </view>
+
+  <view wx:if="{{!showHot && !showEmpty && results.length === 0 && query.length > 0}}" class="hint-block">
+    <text class="hint-text">继续输入至少 2 个字开始搜索</text>
+  </view>
+</view>

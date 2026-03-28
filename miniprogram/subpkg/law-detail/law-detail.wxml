@@ -1,0 +1,67 @@
+<view class="page" wx:if="{{!notFound && law}}">
+  <view class="hero card">
+    <view class="hero-top">
+      <view class="chapter-badge">{{law.chapter}}</view>
+      <view class="fav-btn" bindtap="onToggleFavorite" hover-class="fav-btn--hover">
+        <text class="fav-icon">{{favorited ? '★' : '☆'}}</text>
+      </view>
+    </view>
+    <text class="hero-title">{{law.article}} {{law.title}}</text>
+  </view>
+
+  <view class="section px" wx:if="{{law.keywords && law.keywords.length}}">
+    <view class="section-title">关键词</view>
+    <view class="tag-row flex-wrap">
+      <text class="tag tag-gold" wx:for="{{law.keywords}}" wx:key="*this">{{item}}</text>
+    </view>
+  </view>
+
+  <view class="section px">
+    <view class="section-title">白话解读</view>
+    <view class="body-text card-flat">
+      <block wx:for="{{plainSegments}}" wx:key="index">
+        <text class="{{item.highlight ? 'kw' : ''}}">{{item.text}}</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="section px" wx:if="{{law.lifeExample}}">
+    <view class="section-title">生活案例</view>
+    <view class="body-text card-flat">{{law.lifeExample}}</view>
+  </view>
+
+  <view class="section px" wx:if="{{law.originalText}}">
+    <view class="section-title">法律原文</view>
+    <view class="original-card">
+      <text class="original-text">{{law.originalText}}</text>
+    </view>
+  </view>
+
+  <view class="section px" wx:if="{{law.judicialInterpretation}}">
+    <view class="section-title">司法解释</view>
+    <view class="body-text card-flat muted">{{law.judicialInterpretation}}</view>
+  </view>
+
+  <view class="section px" wx:if="{{law.legislativeHistory}}">
+    <view class="section-title">立法沿革</view>
+    <view class="body-text card-flat muted">{{law.legislativeHistory}}</view>
+  </view>
+
+  <view class="action-bar px">
+    <view class="action-btn" bindtap="onToggleFavorite">
+      <text class="action-icon">{{favorited ? '★' : '☆'}}</text>
+      <text class="action-label">{{favorited ? '已收藏' : '收藏'}}</text>
+    </view>
+    <view class="action-btn" bindtap="onAddNote">
+      <text class="action-icon">📝</text>
+      <text class="action-label">记笔记</text>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
+
+<view class="empty-state" wx:if="{{notFound}}">
+  <text class="icon">📖</text>
+  <text class="text">{{notFoundMsg || '未找到该法条'}}</text>
+</view>

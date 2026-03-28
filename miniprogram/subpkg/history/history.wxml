@@ -1,0 +1,29 @@
+<view class="page">
+  <view class="toolbar px">
+    <text class="toolbar-tip caption">最近浏览 · {{list.length}} 条</text>
+    <button class="clear-btn" bindtap="onClear" disabled="{{!list.length}}">清空历史</button>
+  </view>
+
+  <scroll-view scroll-y class="scroll">
+    <view
+      class="row card"
+      wx:for="{{list}}"
+      wx:key="uid"
+      data-index="{{index}}"
+      bindtap="onRowTap"
+      hover-class="row--hover"
+    >
+      <view class="row-top flex-between">
+        <text class="type-badge type-{{item.type}}">{{item.type}}</text>
+        <text class="mini time">{{item.timeLabel}}</text>
+      </view>
+      <text class="row-title">{{item.title}}</text>
+    </view>
+
+    <view class="empty-state" wx:if="{{!list.length}}">
+      <text class="icon">🕐</text>
+      <text class="text">暂无浏览记录</text>
+    </view>
+    <view class="safe-bottom"></view>
+  </scroll-view>
+</view>

@@ -1,0 +1,139 @@
+.page {
+  padding-bottom: 40rpx;
+}
+
+.hero {
+  margin: 24rpx;
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.topic-icon {
+  font-size: 56rpx;
+  line-height: 1;
+}
+
+.faq-badge {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  padding: 8rpx 20rpx;
+  border-radius: 16rpx;
+}
+
+.fav-btn {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 16rpx;
+  background: rgba(198, 156, 109, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fav-btn--hover {
+  opacity: 0.85;
+}
+
+.fav-icon {
+  font-size: 40rpx;
+  color: var(--gold);
+}
+
+.hero-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1.45;
+  display: block;
+}
+
+.desc {
+  display: block;
+  margin-top: 12rpx;
+  color: var(--text-secondary);
+}
+
+.tag-gold {
+  background: rgba(198, 156, 109, 0.25);
+  color: var(--primary-dark);
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.body-text {
+  font-size: 28rpx;
+  line-height: 1.85;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+}
+
+.content-block {
+  word-break: break-word;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.chip {
+  font-size: 24rpx;
+  padding: 12rpx 20rpx;
+  border-radius: 16rpx;
+  background: var(--surface-alt);
+  color: var(--text-secondary);
+  border: 1rpx solid var(--border);
+}
+
+.chip--law {
+  color: var(--primary);
+  border-color: rgba(43, 95, 138, 0.35);
+  background: rgba(43, 95, 138, 0.06);
+}
+
+.case-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.case-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx;
+  background: var(--surface);
+  border-radius: 16rpx;
+  border: 1rpx solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.case-link-text {
+  font-size: 28rpx;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.chev {
+  font-size: 32rpx;
+  color: var(--gold);
+}
+
+.px {
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+}
+
+.mt-md {
+  margin-top: 16rpx;
+}

@@ -1,0 +1,68 @@
+.page {
+  height: 100vh;
+  background: var(--bg);
+}
+
+.scroll {
+  height: 100%;
+}
+
+.row {
+  margin: 16rpx 24rpx;
+}
+
+.row--hover {
+  opacity: 0.92;
+}
+
+.row-top {
+  margin-bottom: 12rpx;
+}
+
+.type-badge {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+  font-weight: 600;
+  color: #fff;
+}
+
+.type-law {
+  background: var(--primary);
+}
+
+.type-case {
+  background: #5c6bc0;
+}
+
+.type-topic {
+  background: var(--gold);
+  color: var(--primary-dark);
+}
+
+.type-faq {
+  background: #00897b;
+}
+
+.type-tool {
+  background: #6d4c41;
+}
+
+.time {
+  color: var(--text-hint);
+}
+
+.row-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.45;
+  display: block;
+}
+
+.preview {
+  display: block;
+  margin-top: 12rpx;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}

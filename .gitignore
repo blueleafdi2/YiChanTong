@@ -46,3 +46,7 @@ app-release-aligned.apk
 
 # Screenshots (not needed in repo)
 screenshot_*.png
+
+# Mini Program
+miniprogram/private.key
+miniprogram/node_modules/

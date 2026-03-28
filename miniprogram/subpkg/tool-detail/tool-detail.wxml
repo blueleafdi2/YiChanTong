@@ -1,0 +1,35 @@
+<view class="page" wx:if="{{!notFound && tool}}">
+  <view class="hero card">
+    <text class="tool-icon">{{tool.icon}}</text>
+    <text class="hero-title">{{tool.title}}</text>
+    <text class="desc caption" wx:if="{{tool.description}}">{{tool.description}}</text>
+    <button class="export-btn" bindtap="onExport">导出全文</button>
+  </view>
+
+  <view class="section px">
+    <view class="section-title">内容</view>
+    <view class="article card-flat">
+      <block wx:for="{{contentBlocks}}" wx:key="bidx" wx:for-item="blk" wx:for-index="bidx">
+        <view wx:if="{{blk.type === 'h'}}" class="md-h md-h-{{blk.level}}">{{blk.text}}</view>
+        <view wx:elif="{{blk.type === 'text'}}" class="md-p">
+          <block wx:for="{{blk.parts}}" wx:for-item="p" wx:key="pidx" wx:for-index="pidx">
+            <text
+              wx:if="{{p.isLink}}"
+              class="law-ref"
+              data-lawid="{{p.lawId}}"
+              catchtap="onLawRefTap"
+            >{{p.text}}</text>
+            <text wx:else>{{p.text}}</text>
+          </block>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
+
+<view class="empty-state" wx:if="{{notFound}}">
+  <text class="icon">🧰</text>
+  <text class="text">未找到该工具</text>
+</view>

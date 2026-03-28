@@ -1,0 +1,32 @@
+<view class="page safe-bottom">
+  <view class="glossary-card" bindtap="onGlossaryTap">
+    <view class="glossary-inner">
+      <text class="glossary-emoji">📖</text>
+      <view class="glossary-text">
+        <text class="glossary-title">法律词典</text>
+        <text class="glossary-sub">125个法律术语通俗解释</text>
+      </view>
+      <text class="glossary-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="section-head">
+    <text class="section-label">实用工具</text>
+    <text class="section-hint">继承规划 · 流程指引</text>
+  </view>
+
+  <view class="tools-grid">
+    <view
+      wx:for="{{tools}}"
+      wx:key="id"
+      class="tool-card"
+      data-id="{{item.id}}"
+      bindtap="onToolTap"
+    >
+      <text class="tool-icon">{{item.icon}}</text>
+      <text class="tool-title">{{item.title}}</text>
+      <text class="tool-desc">{{item.description}}</text>
+    </view>
+  </view>
+
+</view>

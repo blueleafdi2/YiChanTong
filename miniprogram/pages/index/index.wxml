@@ -1,0 +1,78 @@
+<view class="page">
+  <view class="hero" style="padding-top: {{bannerPaddingTop}}px;">
+    <view class="hero-inner">
+      <text class="hero-brand">遗产通</text>
+      <text class="hero-tagline">让继承法触手可及</text>
+    </view>
+  </view>
+
+  <view class="sheet">
+    <view class="search-bar" bindtap="onTapSearch">
+      <text class="search-icon" aria-hidden="true">🔍</text>
+      <text class="search-placeholder">搜索法条、案例、常见问题…</text>
+    </view>
+
+    <scroll-view class="chip-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="chip-row">
+        <view
+          wx:for="{{quickChips}}"
+          wx:key="topicId"
+          class="chip"
+          data-topicid="{{item.topicId}}"
+          bindtap="onTapChip"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="section-head">
+      <text class="section-title">今日案例</text>
+    </view>
+    <view wx:if="{{todayCase}}" class="case-spotlight" bindtap="onTapTodayCase">
+      <text class="case-spotlight-title">{{todayCase.title}}</text>
+      <text class="case-spotlight-meta">{{todayCase.court}} · {{todayCase.judgeDate}}</text>
+      <text class="case-spotlight-summary">{{todayCase.caseSummary}}</text>
+      <view class="case-spotlight-tags">
+        <text wx:for="{{todayCase.displayTags}}" wx:key="*this" class="mini-tag">{{item}}</text>
+      </view>
+    </view>
+    <view wx:else class="empty-inline">案例加载中…</view>
+
+    <view class="section-head">
+      <text class="section-title">热门问题</text>
+    </view>
+    <view class="faq-list">
+      <view
+        wx:for="{{faqList}}"
+        wx:key="id"
+        class="faq-item"
+        data-topicid="{{item.relatedTopicId}}"
+        data-faqid="{{item.id}}"
+        bindtap="onTapFaq"
+      >
+        <text class="faq-q">{{item.question}}</text>
+        <text class="faq-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">知识专题</text>
+    </view>
+    <view class="topic-grid">
+      <view
+        wx:for="{{topicGrid}}"
+        wx:key="id"
+        class="topic-cell"
+        data-id="{{item.id}}"
+        bindtap="onTapTopic"
+      >
+        <text class="topic-emoji">{{item.icon}}</text>
+        <text class="topic-name">{{item.title}}</text>
+        <text class="topic-desc">{{item.description}}</text>
+      </view>
+    </view>
+
+    <view class="safe-bottom"></view>
+  </view>
+</view>

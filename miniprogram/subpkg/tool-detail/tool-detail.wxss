@@ -1,0 +1,81 @@
+.page {
+  padding-bottom: 40rpx;
+}
+
+.hero {
+  margin: 24rpx;
+  text-align: center;
+}
+
+.tool-icon {
+  font-size: 72rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.hero-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1.4;
+  display: block;
+}
+
+.desc {
+  display: block;
+  margin-top: 12rpx;
+  text-align: left;
+  color: var(--text-secondary);
+}
+
+.export-btn {
+  margin: 28rpx auto 0;
+  width: 280rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: linear-gradient(135deg, var(--gold), #D4A96A);
+  color: #fff;
+  font-size: 28rpx;
+  font-weight: 600;
+  border-radius: 16rpx;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(198, 156, 109, 0.35);
+}
+
+.export-btn::after {
+  border: none;
+}
+
+.article {
+  font-size: 28rpx;
+  line-height: 1.85;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.md-h {
+  font-weight: 700;
+  color: var(--primary);
+  margin: 28rpx 0 16rpx;
+}
+
+.md-h-1 {
+  font-size: 34rpx;
+}
+
+.md-h-2 {
+  font-size: 30rpx;
+}
+
+.md-h-3 {
+  font-size: 28rpx;
+}
+
+.md-p {
+  margin-bottom: 16rpx;
+}
+
+.px {
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+}

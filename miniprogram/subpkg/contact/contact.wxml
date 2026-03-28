@@ -1,0 +1,30 @@
+<view class="page">
+  <view class="intro card">
+    <text class="intro-title">联系我们</text>
+    <text class="intro-body">如有内容纠错、功能建议或其他问题，欢迎通过以下方式联系。本小程序为法律知识学习工具，不提供律师委托服务。</text>
+  </view>
+
+  <view class="card contact-card">
+    <view class="contact-head flex-between">
+      <text class="contact-label">法律服务热线</text>
+      <text class="contact-tag tag-hotline">公益免费</text>
+    </view>
+    <text class="contact-value phone">{{hotline}}</text>
+    <text class="caption sub">全国公共法律服务热线，可查询继承等法律问题</text>
+    <button class="btn-outline full-btn call-btn" bindtap="onCallHotline">拨打 {{hotline}}</button>
+  </view>
+
+  <view class="card contact-card">
+    <view class="contact-head flex-between">
+      <text class="contact-label">意见反馈邮箱</text>
+      <text class="contact-tag">内容纠错</text>
+    </view>
+    <text class="contact-value email">{{email}}</text>
+    <button class="btn-primary full-btn" bindtap="onCopyEmail">复制邮箱</button>
+  </view>
+
+  <view class="footer-note caption px">
+    服务时间以各渠道公示为准。紧急事务请拨打 110 或前往当地司法机关。
+  </view>
+  <view class="safe-bottom"></view>
+</view>

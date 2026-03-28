@@ -1,0 +1,38 @@
+<view class="page">
+  <scroll-view scroll-y class="scroll">
+    <view class="swipe" wx:for="{{list}}" wx:key="uid">
+      <view class="swipe-back">
+        <view
+          class="swipe-del"
+          catchtap="onDelete"
+          data-type="{{item.type}}"
+          data-id="{{item.id}}"
+        >移除</view>
+      </view>
+      <view
+        class="swipe-front"
+        style="transform: translateX({{item.slideX}}rpx)"
+        data-index="{{index}}"
+        bindtouchstart="onTouchStart"
+        catchtouchmove="onTouchMove"
+        bindtouchend="onTouchEnd"
+        bindtap="onRowTap"
+      >
+        <view class="row card">
+          <view class="row-top flex-between">
+            <text class="type-badge type-{{item.type}}">{{item.type}}</text>
+            <text class="mini time">{{item.timeLabel}}</text>
+          </view>
+          <text class="row-title">{{item.title}}</text>
+          <text class="caption hint">左滑移除收藏</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{!list.length}}">
+      <text class="icon">⭐</text>
+      <text class="text">暂无收藏，去法条或案例页点亮星标吧</text>
+    </view>
+    <view class="safe-bottom"></view>
+  </scroll-view>
+</view>

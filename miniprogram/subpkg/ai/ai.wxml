@@ -1,0 +1,82 @@
+<view class="page">
+  <scroll-view
+    class="chat-scroll"
+    scroll-y
+    scroll-with-animation
+    scroll-into-view="{{scrollTo}}"
+  >
+    <view class="chat-inner">
+      <view class="hint card-flat" wx:if="{{!messages.length}}">
+        <text class="hint-title">遗产通 · AI 继承法助手</text>
+        <text class="hint-body">可询问遗嘱、法定继承、遗产范围等问题。回复中的法条可点击查看。</text>
+      </view>
+
+      <block wx:for="{{messages}}" wx:key="index" wx:for-index="idx">
+        <view class="msg-row msg-row--user" wx:if="{{item.role === 'user'}}" id="msg-{{idx}}">
+          <view class="bubble bubble-user">{{item.text}}</view>
+        </view>
+
+        <view class="msg-row msg-row--ai" wx:elif="{{item.role === 'assistant'}}" id="msg-{{idx}}">
+          <view class="bubble bubble-ai" wx:if="{{item.loading}}">
+            <text class="thinking">正在思考{{elapsedText}}…</text>
+          </view>
+          <block wx:else>
+            <view class="bubble bubble-ai">
+              <block wx:for="{{item.parts}}" wx:for-item="p" wx:for-index="pidx" wx:key="pidx">
+                <text
+                  wx:if="{{p.isLink}}"
+                  class="law-ref"
+                  data-lawid="{{p.lawId}}"
+                  catchtap="onLawRefTap"
+                >{{p.text}}</text>
+                <text wx:else>{{p.text}}</text>
+              </block>
+            </view>
+            <view
+              class="chips"
+              wx:if="{{(item.relatedLawIds && item.relatedLawIds.length) || (item.relatedCases && item.relatedCases.length)}}"
+            >
+              <text class="chips-label">相关内容</text>
+              <scroll-view class="chips-scroll" scroll-x enable-flex>
+                <view
+                  class="chip chip-law"
+                  wx:for="{{item.relatedLawIds}}"
+                  wx:for-item="lawId"
+                  wx:key="*this"
+                  data-id="{{lawId}}"
+                  bindtap="onChipLaw"
+                >法条 {{lawId}}</view>
+                <view
+                  class="chip chip-case"
+                  wx:for="{{item.relatedCases}}"
+                  wx:for-item="rc"
+                  wx:key="id"
+                  data-id="{{rc.id}}"
+                  bindtap="onChipCase"
+                >{{rc.title}}</view>
+              </scroll-view>
+            </view>
+          </block>
+        </view>
+      </block>
+
+      <view class="scroll-spacer"></view>
+    </view>
+  </scroll-view>
+
+  <view class="input-bar">
+    <input
+      class="input-field"
+      type="text"
+      confirm-type="send"
+      placeholder="输入您的问题…"
+      value="{{inputValue}}"
+      bindinput="onInput"
+      bindconfirm="onSend"
+      disabled="{{sending}}"
+      cursor-spacing="20"
+      adjust-position="{{true}}"
+    />
+    <view class="send-btn {{sending ? 'disabled' : ''}}" bindtap="onSend">发送</view>
+  </view>
+</view>

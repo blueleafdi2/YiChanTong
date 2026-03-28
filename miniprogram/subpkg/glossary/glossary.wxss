@@ -1,0 +1,82 @@
+.page {
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+.cat-scroll {
+  white-space: nowrap;
+  padding: 8rpx 24rpx 16rpx;
+  max-height: 88rpx;
+}
+
+.cat-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 12rpx 24rpx;
+  margin-right: 12rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+}
+
+.cat-chip.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  font-weight: 500;
+}
+
+.count-tip {
+  padding: 0 24rpx 8rpx;
+  color: var(--text-hint);
+}
+
+.list {
+  padding: 8rpx 0 24rpx;
+}
+
+.term-card {
+  margin: 16rpx 24rpx;
+}
+
+.term-card--hover {
+  opacity: 0.92;
+}
+
+.term-head {
+  align-items: flex-start;
+  gap: 16rpx;
+}
+
+.term-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.term-badge {
+  font-size: 28rpx;
+  flex-shrink: 0;
+}
+
+.term-cat {
+  display: block;
+  margin-top: 8rpx;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.term-preview {
+  display: block;
+  margin-top: 12rpx;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.px {
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+}
