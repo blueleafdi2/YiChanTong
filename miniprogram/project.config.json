@@ -11,8 +11,8 @@
         "type": "file"
       },
       {
-        "value": "private.key",
-        "type": "file"
+        "value": ".key",
+        "type": "suffix"
       },
       {
         "value": "docs",
@@ -62,7 +62,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "3.6.0",
-  "appid": "wxf63bd90b02a95c9f",
+  "appid": "wxbaedb6643b50757d",
   "projectname": "yichangtong-miniprogram",
   "condition": {},
   "editorSetting": {

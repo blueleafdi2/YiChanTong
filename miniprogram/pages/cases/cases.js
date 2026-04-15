@@ -163,5 +163,12 @@ Page({
     const { id } = e.currentTarget.dataset
     if (!id) return
     wx.navigateTo({ url: `/subpkg/case-detail/case-detail?id=${id}` })
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '遗产通 — 全国法院继承纠纷案例库',
+      path: '/pages/cases/cases'
+    }
   }
 })

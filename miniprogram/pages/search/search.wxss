@@ -187,6 +187,24 @@
   border: none;
 }
 
+.empty-ai-btn {
+  margin-top: 24rpx;
+  background: linear-gradient(135deg, #667EEA, #764BA2) !important;
+  color: #fff !important;
+  font-size: 28rpx;
+  font-weight: 500;
+  border-radius: 16rpx !important;
+  padding: 0 40rpx;
+  line-height: 80rpx;
+  height: 80rpx;
+  border: none;
+  box-shadow: 0 6rpx 20rpx rgba(102, 126, 234, 0.3);
+}
+
+.empty-ai-btn::after {
+  border: none;
+}
+
 .hint-block {
   padding: 48rpx 40rpx;
   text-align: center;

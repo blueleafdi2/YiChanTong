@@ -1,15 +1,47 @@
 <view class="page">
-  <view class="hero" style="padding-top: {{bannerPaddingTop}}px;">
-    <view class="hero-inner">
-      <text class="hero-brand">遗产通</text>
-      <text class="hero-tagline">让继承法触手可及</text>
+  <view class="header" style="padding-top: {{bannerPaddingTop}}px;">
+    <view class="header-inner">
+      <text class="header-brand">遗产通</text>
+      <view class="header-search" bindtap="onTapSearch">
+        <text class="header-search-icon">🔍</text>
+      </view>
     </view>
   </view>
 
   <view class="sheet">
     <view class="search-bar" bindtap="onTapSearch">
       <text class="search-icon" aria-hidden="true">🔍</text>
-      <text class="search-placeholder">搜索法条、案例、常见问题…</text>
+      <text class="search-placeholder">搜索法条、案例、法律问题…</text>
+    </view>
+
+    <view class="ai-card" bindtap="onTapAI">
+      <view class="ai-card-left">
+        <text class="ai-card-icon">🤖</text>
+        <view class="ai-card-text">
+          <text class="ai-card-title">AI继承法助手</text>
+          <text class="ai-card-desc">有继承法问题？智能为您解答</text>
+        </view>
+      </view>
+      <text class="ai-card-arrow">→</text>
+    </view>
+
+    <view class="quick-grid">
+      <view class="quick-item" bindtap="onQuickTap" data-tab="laws">
+        <text class="quick-icon">📖</text>
+        <text class="quick-label">法律库</text>
+      </view>
+      <view class="quick-item" bindtap="onQuickTap" data-tab="cases">
+        <text class="quick-icon">📋</text>
+        <text class="quick-label">案例库</text>
+      </view>
+      <view class="quick-item" bindtap="onQuickTap" data-tab="glossary">
+        <text class="quick-icon">📚</text>
+        <text class="quick-label">法律词典</text>
+      </view>
+      <view class="quick-item" bindtap="onQuickTap" data-tab="tools">
+        <text class="quick-icon">🔧</text>
+        <text class="quick-label">工具箱</text>
+      </view>
     </view>
 
     <scroll-view class="chip-scroll" scroll-x enhanced show-scrollbar="{{false}}">
@@ -26,18 +58,33 @@
       </view>
     </scroll-view>
 
+    <view wx:if="{{newsItem}}" class="news-bar" bindtap="onTapNews">
+      <text class="news-badge">动态</text>
+      <text class="news-text">{{newsItem.title}}</text>
+      <text class="news-arrow">›</text>
+    </view>
+
     <view class="section-head">
-      <text class="section-title">今日案例</text>
+      <text class="section-title">精选案例</text>
+      <text class="section-more" bindtap="onQuickTap" data-tab="cases">更多 ›</text>
     </view>
-    <view wx:if="{{todayCase}}" class="case-spotlight" bindtap="onTapTodayCase">
-      <text class="case-spotlight-title">{{todayCase.title}}</text>
-      <text class="case-spotlight-meta">{{todayCase.court}} · {{todayCase.judgeDate}}</text>
-      <text class="case-spotlight-summary">{{todayCase.caseSummary}}</text>
-      <view class="case-spotlight-tags">
-        <text wx:for="{{todayCase.displayTags}}" wx:key="*this" class="mini-tag">{{item}}</text>
+    <scroll-view class="case-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+      <view class="case-scroll-inner">
+        <view
+          wx:for="{{featuredCases}}"
+          wx:key="id"
+          class="case-card-h"
+          data-id="{{item.id}}"
+          bindtap="onTapCase"
+        >
+          <text class="case-card-title">{{item.title}}</text>
+          <text class="case-card-meta">{{item.court}} · {{item.judgeDate}}</text>
+          <view class="case-card-tags">
+            <text wx:for="{{item.displayTags}}" wx:for-item="tag" wx:key="*this" class="mini-tag">{{tag}}</text>
+          </view>
+        </view>
       </view>
-    </view>
-    <view wx:else class="empty-inline">案例加载中…</view>
+    </scroll-view>
 
     <view class="section-head">
       <text class="section-title">热门问题</text>
@@ -56,21 +103,9 @@
       </view>
     </view>
 
-    <view class="section-head">
-      <text class="section-title">知识专题</text>
-    </view>
-    <view class="topic-grid">
-      <view
-        wx:for="{{topicGrid}}"
-        wx:key="id"
-        class="topic-cell"
-        data-id="{{item.id}}"
-        bindtap="onTapTopic"
-      >
-        <text class="topic-emoji">{{item.icon}}</text>
-        <text class="topic-name">{{item.title}}</text>
-        <text class="topic-desc">{{item.description}}</text>
-      </view>
+    <view class="share-bar">
+      <text class="share-text">💡 觉得有用？</text>
+      <button class="share-btn" open-type="share">分享给朋友</button>
     </view>
 
     <view class="safe-bottom"></view>

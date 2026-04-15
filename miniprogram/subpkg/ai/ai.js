@@ -134,9 +134,24 @@ Page({
     if (id) lawLink.navigateToLaw(id)
   },
 
-  onChipCase(e) {
-    const { id } = e.currentTarget.dataset
+  onChipCase: function (e) {
+    var id = e.currentTarget.dataset.id
     if (id) wx.navigateTo({ url: '/subpkg/case-detail/case-detail?id=' + id })
+  },
+
+  onSuggest: function (e) {
+    var q = e.currentTarget.dataset.q
+    if (q) {
+      this.setData({ inputValue: q })
+      this.onSend()
+    }
+  },
+
+  onShareAppMessage: function () {
+    return {
+      title: '遗产通AI助手 — 智能解答继承法问题',
+      path: '/subpkg/ai/ai'
+    }
   },
 
   onSend() {

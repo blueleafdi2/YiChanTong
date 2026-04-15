@@ -1,4 +1,8 @@
 <view class="page">
+  <view class="ai-disclaimer">
+    <text class="ai-disclaimer-text">本功能由深度合成技术驱动，输出内容仅供参考，不构成法律意见</text>
+  </view>
+
   <scroll-view
     class="chat-scroll"
     scroll-y
@@ -8,7 +12,12 @@
     <view class="chat-inner">
       <view class="hint card-flat" wx:if="{{!messages.length}}">
         <text class="hint-title">遗产通 · AI 继承法助手</text>
-        <text class="hint-body">可询问遗嘱、法定继承、遗产范围等问题。回复中的法条可点击查看。</text>
+        <text class="hint-body">可询问遗嘱、法定继承、遗产范围等问题。回复中的法条可点击查看。\nAI回复仅供参考，复杂问题建议咨询律师。</text>
+        <view class="hint-suggestions">
+          <view class="hint-chip" bindtap="onSuggest" data-q="什么是法定继承？">什么是法定继承？</view>
+          <view class="hint-chip" bindtap="onSuggest" data-q="遗嘱怎么写才有效？">遗嘱怎么写才有效？</view>
+          <view class="hint-chip" bindtap="onSuggest" data-q="继子女有继承权吗？">继子女有继承权吗？</view>
+        </view>
       </view>
 
       <block wx:for="{{messages}}" wx:key="index" wx:for-index="idx">
@@ -69,7 +78,7 @@
       class="input-field"
       type="text"
       confirm-type="send"
-      placeholder="输入您的问题…"
+      placeholder="输入继承法相关问题…"
       value="{{inputValue}}"
       bindinput="onInput"
       bindconfirm="onSend"

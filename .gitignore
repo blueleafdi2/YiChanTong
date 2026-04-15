@@ -49,4 +49,5 @@ screenshot_*.png
 
 # Mini Program
 miniprogram/private.key
+miniprogram/*.key
 miniprogram/node_modules/

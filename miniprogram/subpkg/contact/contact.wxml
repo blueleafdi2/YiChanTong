@@ -1,16 +1,54 @@
 <view class="page">
   <view class="intro card">
-    <text class="intro-title">联系我们</text>
-    <text class="intro-body">如有内容纠错、功能建议或其他问题，欢迎通过以下方式联系。本小程序为法律知识学习工具，不提供律师委托服务。</text>
+    <text class="intro-title">法律咨询服务</text>
+    <text class="intro-body">遗产通与专业律师合作，为您提供继承法领域的专业咨询服务。AI助手可解答常见问题，复杂情况建议咨询律师。</text>
+  </view>
+
+  <view class="card lawyer-card">
+    <view class="lawyer-head">
+      <view class="lawyer-avatar">
+        <text class="lawyer-avatar-text">律</text>
+      </view>
+      <view class="lawyer-info">
+        <text class="lawyer-name">合作律师</text>
+        <text class="lawyer-field">专注继承法、婚姻家事</text>
+      </view>
+      <text class="lawyer-tag">已认证</text>
+    </view>
+    <view class="lawyer-services">
+      <view class="service-item">
+        <text class="service-icon">💬</text>
+        <text class="service-text">遗产继承咨询</text>
+      </view>
+      <view class="service-item">
+        <text class="service-icon">📝</text>
+        <text class="service-text">遗嘱起草审核</text>
+      </view>
+      <view class="service-item">
+        <text class="service-icon">⚖️</text>
+        <text class="service-text">继承纠纷处理</text>
+      </view>
+    </view>
+    <view class="lawyer-contact-row">
+      <text class="lawyer-wx-label">律师微信</text>
+      <text class="lawyer-wx-id">LawServicePro</text>
+      <view class="copy-btn-small" bindtap="onCopyWechat">
+        <text>复制</text>
+      </view>
+    </view>
+    <view class="wx-qr-wrap" wx:if="{{hasQrCode}}">
+      <image class="wx-qr" src="/assets/wx-qrcode.png" mode="widthFix" show-menu-by-longpress="{{true}}" />
+      <text class="wx-qr-hint">长按识别或截图保存二维码</text>
+    </view>
   </view>
 
   <view class="card contact-card">
     <view class="contact-head flex-between">
-      <text class="contact-label">法律服务热线</text>
+      <text class="contact-label">公共法律服务热线</text>
       <text class="contact-tag tag-hotline">公益免费</text>
     </view>
     <text class="contact-value phone">{{hotline}}</text>
-    <text class="caption sub">全国公共法律服务热线，可查询继承等法律问题</text>
+    <text class="caption sub">全国公共法律服务热线，24小时服务</text>
     <button class="btn-outline full-btn call-btn" bindtap="onCallHotline">拨打 {{hotline}}</button>
   </view>
 
@@ -23,8 +61,15 @@
     <button class="btn-primary full-btn" bindtap="onCopyEmail">复制邮箱</button>
   </view>
 
-  <view class="footer-note caption px">
-    服务时间以各渠道公示为准。紧急事务请拨打 110 或前往当地司法机关。
+  <view class="ai-tip-card" bindtap="onTapAI">
+    <text class="ai-tip-icon">🤖</text>
+    <text class="ai-tip-text">简单问题可先试试 AI法律助手</text>
+    <text class="ai-tip-arrow">›</text>
   </view>
+
+  <view class="disclaimer card">
+    <text class="disclaimer-text">免责声明：本平台仅提供信息展示与技术支撑，不直接提供诉讼代理或法律委托服务。具体法律事务请以执业律师的专业意见为准。</text>
+  </view>
+
   <view class="safe-bottom"></view>
 </view>

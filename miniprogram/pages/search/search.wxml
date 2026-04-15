@@ -51,6 +51,7 @@
   <view wx:if="{{showEmpty}}" class="empty-block">
     <text class="empty-icon" aria-hidden="true">📭</text>
     <text class="empty-text">未找到相关结果，换个关键词试试</text>
+    <button class="empty-ai-btn" bindtap="onEmptyAiTap">🤖 试试 AI 助手</button>
   </view>
 
   <view wx:if="{{!showHot && !showEmpty && results.length === 0 && query.length > 0}}" class="hint-block">

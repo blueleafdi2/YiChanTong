@@ -118,5 +118,13 @@ Page({
         }
       }
     })
+  },
+
+  onShareAppMessage: function () {
+    var law = this.data.law
+    return {
+      title: law ? ('第' + law.article + '条 ' + law.title) : '遗产通 — 法条详情',
+      path: '/subpkg/law-detail/law-detail?id=' + (law ? law.id : '')
+    }
   }
 })

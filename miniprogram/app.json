@@ -16,6 +16,7 @@
         "topic-detail/topic-detail",
         "tool-detail/tool-detail",
         "glossary/glossary",
+        "ai/ai",
         "favorites/favorites",
         "notes/notes",
         "history/history",

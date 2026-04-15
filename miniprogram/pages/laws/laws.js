@@ -63,5 +63,12 @@ Page({
     const { id } = e.currentTarget.dataset
     if (!id) return
     wx.navigateTo({ url: `/subpkg/law-detail/law-detail?id=${id}` })
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '遗产通 — 民法典继承编法条库',
+      path: '/pages/laws/laws'
+    }
   }
 })

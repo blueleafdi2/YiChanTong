@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遗产通 V2.0 企业版 — 高保真UI设计</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;background:#1a1a2e;color:#fff;line-height:1.5}
+h1{text-align:center;padding:40px 20px 10px;font-size:28px;font-weight:700;letter-spacing:2px}
+.subtitle{text-align:center;color:rgba(255,255,255,0.6);font-size:14px;margin-bottom:40px}
+.screens{display:flex;flex-wrap:wrap;justify-content:center;gap:40px;padding:0 20px 60px}
+.screen-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+.screen-label{font-size:16px;font-weight:600;color:rgba(255,255,255,0.85);letter-spacing:1px}
+.screen-desc{font-size:12px;color:rgba(255,255,255,0.5);max-width:375px;text-align:center}
+.phone{width:375px;height:812px;border-radius:44px;overflow:hidden;background:#f7f7f5;position:relative;box-shadow:0 20px 80px rgba(0,0,0,0.5),inset 0 0 0 8px #2a2a3a;color:#1a1a1a}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:160px;height:34px;background:#2a2a3a;border-radius:0 0 20px 20px;z-index:100}
+.status-bar{height:54px;background:#1A3D5C;display:flex;align-items:flex-end;padding:0 24px 4px;justify-content:space-between;position:relative;z-index:10}
+.status-bar .time{font-size:14px;font-weight:600;color:#fff}
+.status-bar .icons{display:flex;gap:6px;font-size:12px;color:#fff}
+.nav-bar{height:44px;display:flex;align-items:center;padding:0 16px;font-size:17px;font-weight:600;color:#fff}
+.nav-bar-dark{background:#2B5F8A}
+.nav-bar-back{margin-right:8px;font-size:20px;cursor:pointer}
+.content{overflow-y:auto;height:calc(100% - 54px - 50px);-webkit-overflow-scrolling:touch}
+.content-nobar{height:calc(100% - 54px)}
+.tab-bar{position:absolute;bottom:0;left:0;right:0;height:50px;background:#fff;display:flex;border-top:1px solid #eee;z-index:50}
+.tab-bar .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;color:#999}
+.tab.active{color:#2B5F8A}
+.tab .tab-icon{font-size:20px}
+
+/* ===== HOME PAGE ===== */
+.home-header{background:linear-gradient(145deg,#1A3D5C,#2B5F8A,#3A7CB8);padding:60px 20px 20px;border-radius:0 0 24px 24px}
+.home-header-inner{display:flex;justify-content:space-between;align-items:center}
+.home-brand{font-size:24px;font-weight:700;color:#fff;letter-spacing:3px}
+.home-search-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:16px}
+.search-bar{margin:12px 16px 16px;padding:12px 16px;background:#fff;border-radius:12px;display:flex;align-items:center;gap:10px;font-size:14px;color:#999;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.ai-entry{margin:0 16px 16px;padding:16px;background:linear-gradient(135deg,#667EEA,#764BA2);border-radius:12px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 24px rgba(102,126,234,0.35)}
+.ai-entry-icon{font-size:28px}
+.ai-entry-text{flex:1}
+.ai-entry-title{font-size:16px;font-weight:700;color:#fff}
+.ai-entry-desc{font-size:12px;color:rgba(255,255,255,0.85)}
+.ai-entry-arrow{font-size:20px;color:rgba(255,255,255,0.8)}
+.quick-grid{display:flex;justify-content:space-around;margin:0 16px 16px;padding:16px 0;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.quick-item{display:flex;flex-direction:column;align-items:center;gap:6px}
+.quick-item-icon{font-size:24px;width:48px;height:48px;line-height:48px;text-align:center;background:#F0F4F8;border-radius:50%}
+.quick-item-label{font-size:12px;color:#333;font-weight:500}
+.chips{display:flex;gap:8px;padding:0 16px 12px;overflow-x:auto}
+.chip-tag{padding:8px 16px;background:#fff;border-radius:20px;font-size:13px;color:#2B5F8A;border:1px solid rgba(43,95,138,0.2);white-space:nowrap;flex-shrink:0}
+.news-bar{margin:0 16px 12px;padding:10px 14px;background:#FFF8E1;border-radius:8px;display:flex;align-items:center;gap:8px;font-size:13px}
+.news-badge{font-size:11px;padding:2px 8px;background:#FF6B35;color:#fff;border-radius:4px;font-weight:600}
+.section-head{display:flex;justify-content:space-between;align-items:center;padding:8px 16px 10px}
+.section-title{font-size:16px;font-weight:700;color:#1a1a1a;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';width:3px;height:16px;background:#2B5F8A;border-radius:2px}
+.section-more{font-size:13px;color:#2B5F8A}
+.case-cards{display:flex;gap:12px;padding:0 16px 16px;overflow-x:auto}
+.case-card{min-width:260px;max-width:260px;padding:14px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-left:4px solid #B33A3A;flex-shrink:0}
+.case-card-title{font-size:14px;font-weight:600;color:#1a1a1a;line-height:1.45;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin-bottom:6px}
+.case-card-meta{font-size:11px;color:#666;margin-bottom:8px}
+.case-card-tags{display:flex;gap:6px;flex-wrap:wrap}
+.case-mini-tag{font-size:11px;padding:3px 8px;border-radius:10px;background:rgba(43,95,138,0.1);color:#2B5F8A}
+.faq-list{margin:0 16px 16px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.faq-item{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid #f0ede8;font-size:14px;color:#1a1a1a}
+.faq-item:last-child{border-bottom:none}
+.faq-item span{flex:1}
+.faq-arrow{color:#ccc;font-size:16px}
+.share-bar{margin:8px 16px;padding:14px 16px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#666;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.share-btn-mock{font-size:13px;color:#2B5F8A;background:rgba(43,95,138,0.1);border-radius:16px;padding:6px 16px}
+
+/* ===== AI PAGE ===== */
+.ai-disclaimer{padding:8px 16px;background:#FFF8E1;text-align:center;font-size:11px;color:#856404}
+.chat-area{padding:16px;flex:1;overflow-y:auto}
+.chat-welcome{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);margin-bottom:16px}
+.chat-welcome h3{font-size:16px;color:#2B5F8A;font-weight:700;margin-bottom:8px}
+.chat-welcome p{font-size:13px;color:#666;line-height:1.6}
+.suggest-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.suggest-chip{padding:8px 14px;background:rgba(43,95,138,0.08);border-radius:16px;font-size:12px;color:#2B5F8A;border:1px solid rgba(43,95,138,0.15)}
+.msg-user{display:flex;justify-content:flex-end;margin-bottom:16px}
+.msg-user .bubble{max-width:80%;padding:10px 14px;background:#2B5F8A;color:#fff;border-radius:12px 12px 4px 12px;font-size:14px;line-height:1.6}
+.msg-ai{display:flex;flex-direction:column;margin-bottom:16px}
+.msg-ai .bubble{max-width:85%;padding:10px 14px;background:#fff;color:#1a1a1a;border-radius:12px 12px 12px 4px;font-size:14px;line-height:1.6;border:1px solid #eee;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.law-ref-span{color:#2B5F8A;text-decoration:underline;font-weight:500}
+.ai-chips{margin-top:8px}
+.ai-chips-label{font-size:11px;color:#999;display:block;margin-bottom:6px}
+.ai-chips-row{display:flex;gap:6px;flex-wrap:wrap}
+.ai-chip-law{display:inline-flex;padding:4px 10px;border-radius:8px;font-size:11px;background:rgba(43,95,138,0.1);color:#2B5F8A;font-weight:500}
+.ai-chip-case{display:inline-flex;padding:4px 10px;border-radius:8px;font-size:11px;background:rgba(179,58,58,0.1);color:#B33A3A;font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.input-bar{display:flex;align-items:center;gap:10px;padding:10px 16px 30px;background:#fff;border-top:1px solid #eee}
+.input-mock{flex:1;height:40px;background:#f5f5f5;border-radius:12px;padding:0 14px;font-size:14px;color:#999;line-height:40px}
+.send-mock{padding:0 18px;height:40px;line-height:40px;background:#2B5F8A;color:#fff;font-size:14px;font-weight:600;border-radius:12px}
+
+/* ===== CONTACT/LAWYER PAGE ===== */
+.lawyer-card{margin:16px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.lawyer-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.lawyer-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#2B5F8A,#3A7CB8);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0}
+.lawyer-info{flex:1}
+.lawyer-name{font-size:16px;font-weight:600;color:#1a1a1a}
+.lawyer-field{font-size:12px;color:#666}
+.lawyer-badge{font-size:11px;padding:4px 10px;border-radius:12px;background:rgba(43,95,138,0.1);color:#2B5F8A;font-weight:500}
+.services{display:flex;gap:10px;margin-bottom:16px}
+.service{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;background:#F7F9FC;border-radius:8px}
+.service-icon{font-size:20px}
+.service-text{font-size:11px;color:#666;text-align:center}
+.wx-row{display:flex;align-items:center;gap:8px;padding:12px;background:#F7F9FC;border-radius:8px;margin-bottom:16px}
+.wx-label{font-size:13px;color:#666}
+.wx-id{flex:1;font-size:14px;font-weight:600;color:#1a1a1a}
+.wx-copy{padding:4px 12px;background:#2B5F8A;border-radius:6px;font-size:12px;color:#fff}
+.qr-wrap{text-align:center;margin-bottom:8px}
+.qr-placeholder{width:200px;height:200px;background:#f0f0f0;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:#999}
+.qr-hint{display:block;font-size:11px;color:#999;margin-top:8px;text-align:center}
+.hotline-card,.email-card{margin:0 16px 16px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.contact-label{font-size:13px;font-weight:600;color:#1a1a1a;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.contact-tag{font-size:11px;padding:3px 8px;border-radius:6px;font-weight:500}
+.tag-free{background:rgba(43,95,138,0.12);color:#2B5F8A}
+.tag-fix{background:rgba(198,156,109,0.25);color:#8B6914}
+.contact-val{font-size:22px;font-weight:700;color:#2B5F8A;display:block;margin-bottom:4px}
+.contact-sub{font-size:12px;color:#666;display:block;margin-bottom:14px}
+.btn-outline{width:100%;padding:10px;border:1px solid #2B5F8A;color:#2B5F8A;border-radius:10px;text-align:center;font-size:14px;font-weight:500;background:none}
+.btn-primary{width:100%;padding:10px;background:#2B5F8A;color:#fff;border-radius:10px;text-align:center;font-size:14px;font-weight:500;border:none}
+.ai-tip{margin:0 16px 16px;padding:14px;background:linear-gradient(135deg,rgba(102,126,234,0.08),rgba(118,75,162,0.08));border-radius:12px;display:flex;align-items:center;gap:10px;border:1px solid rgba(102,126,234,0.15);font-size:13px;color:#667EEA;font-weight:500}
+.disclaimer-card{margin:0 16px 16px;background:#FFF8E1;border-radius:12px;padding:14px;font-size:11px;color:#856404;line-height:1.65}
+
+/* ===== MINE PAGE ===== */
+.user-card{display:flex;align-items:center;gap:14px;margin:16px;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2B5F8A,#3A7CB8);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff}
+.user-info{flex:1}
+.user-name{font-size:17px;font-weight:600;color:#1a1a1a}
+.user-desc{font-size:12px;color:#999}
+.menu-card{margin:0 16px 16px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.menu-item{display:flex;align-items:center;padding:14px 16px;gap:12px;border-bottom:1px solid #f5f5f5;font-size:15px;color:#1a1a1a}
+.menu-item:last-child{border-bottom:none}
+.menu-item-icon{font-size:20px;width:28px;text-align:center}
+.menu-item-title{flex:1;font-weight:500}
+.menu-badge-ai{font-size:10px;padding:2px 8px;background:linear-gradient(135deg,#667EEA,#764BA2);color:#fff;border-radius:10px}
+.menu-item-arrow{color:#ccc;font-size:16px}
+.about-card{margin:0 16px 16px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);text-align:center}
+.about-title{font-size:16px;font-weight:700;color:#1a1a1a;display:block;margin-bottom:4px}
+.about-ver{font-size:12px;color:#999;display:block;margin-bottom:6px}
+.about-body{font-size:13px;color:#666;display:block;margin-bottom:4px}
+.about-stats{font-size:11px;color:#999;display:block;margin-bottom:12px}
+.about-divider{height:1px;background:#f0f0f0;margin:12px 0}
+.sources{text-align:left}
+.sources-title{font-size:13px;font-weight:600;color:#1a1a1a;display:block;margin-bottom:8px}
+.source-line{font-size:12px;color:#666;display:block;line-height:1.8}
+.privacy-link{text-align:center;margin:0 16px;font-size:13px;color:#2B5F8A;text-decoration:underline}
+
+/* ===== TOOLS PAGE ===== */
+.tools-header-ai{margin:16px;padding:16px;background:linear-gradient(135deg,#667EEA,#764BA2);border-radius:12px;display:flex;align-items:center;gap:12px;box-shadow:0 6px 24px rgba(102,126,234,0.3)}
+.tools-header-ai .ai-icon{font-size:28px}
+.tools-header-ai .ai-text{flex:1}
+.tools-header-ai .ai-title{font-size:16px;font-weight:700;color:#fff}
+.tools-header-ai .ai-sub{font-size:12px;color:rgba(255,255,255,0.85)}
+.tools-header-ai .ai-arrow{font-size:24px;color:rgba(255,255,255,0.8)}
+.glossary-entry{margin:0 16px 16px;border:2px solid #C69C6D;border-radius:12px;padding:16px;display:flex;align-items:center;gap:12px}
+.glossary-entry .g-icon{font-size:28px}
+.glossary-entry .g-text{flex:1}
+.glossary-entry .g-title{font-size:16px;font-weight:700;color:#2B5F8A}
+.glossary-entry .g-sub{font-size:12px;color:#666}
+.glossary-entry .g-arrow{font-size:24px;color:#C69C6D}
+.tools-section-head{padding:0 16px;margin-bottom:12px}
+.tools-section-title{font-size:16px;font-weight:700;color:#1a1a1a;display:block}
+.tools-section-hint{font-size:12px;color:#999;margin-top:4px;display:block}
+.tools-grid{display:flex;flex-wrap:wrap;gap:12px;padding:0 16px 16px}
+.tool-card{width:calc(50% - 6px);padding:14px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.tool-card-icon{font-size:24px;display:block;margin-bottom:8px}
+.tool-card-title{font-size:14px;font-weight:600;color:#2B5F8A;display:block;margin-bottom:6px}
+.tool-card-desc{font-size:12px;color:#666;line-height:1.45;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+
+/* Legend */
+.legend{max-width:900px;margin:0 auto 40px;padding:0 20px}
+.legend h2{font-size:20px;font-weight:700;margin-bottom:16px;text-align:center;color:rgba(255,255,255,0.9)}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.legend-item{background:rgba(255,255,255,0.06);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.1)}
+.legend-item h3{font-size:14px;font-weight:600;color:#667EEA;margin-bottom:8px}
+.legend-item p{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6}
+.legend-color{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle;margin-right:6px}
+
+footer{text-align:center;padding:30px;font-size:12px;color:rgba(255,255,255,0.4)}
+</style>
+</head>
+<body>
+
+<h1>遗产通 V2.0 · 企业版 UI 设计</h1>
+<p class="subtitle">深圳市迪莹互联网技术有限公司 · WeChat Mini Program · 高保真设计稿</p>
+
+<div class="screens">
+
+<!-- ==================== 首页 ==================== -->
+<div class="screen-wrap">
+  <div class="screen-label">首页 · Home</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    <div class="content">
+      <div class="home-header">
+        <div class="home-header-inner">
+          <span class="home-brand">遗产通</span>
+          <span class="home-search-icon">🔍</span>
+        </div>
+      </div>
+      <div style="margin-top:-8px;position:relative;z-index:1">
+        <div class="search-bar">🔍 搜索法条、案例、法律问题…</div>
+        <div class="ai-entry">
+          <span class="ai-entry-icon">🤖</span>
+          <div class="ai-entry-text">
+            <div class="ai-entry-title">AI继承法助手</div>
+            <div class="ai-entry-desc">有继承法问题？智能为您解答</div>
+          </div>
+          <span class="ai-entry-arrow">→</span>
+        </div>
+        <div class="quick-grid">
+          <div class="quick-item"><span class="quick-item-icon">📖</span><span class="quick-item-label">法律库</span></div>
+          <div class="quick-item"><span class="quick-item-icon">📋</span><span class="quick-item-label">案例库</span></div>
+          <div class="quick-item"><span class="quick-item-icon">📚</span><span class="quick-item-label">法律词典</span></div>
+          <div class="quick-item"><span class="quick-item-icon">🔧</span><span class="quick-item-label">工具箱</span></div>
+        </div>
+        <div class="chips">
+          <span class="chip-tag">遗嘱效力</span>
+          <span class="chip-tag">法定继承</span>
+          <span class="chip-tag">遗产范围</span>
+          <span class="chip-tag">代位继承</span>
+          <span class="chip-tag">遗产分割</span>
+        </div>
+        <div class="news-bar">
+          <span class="news-badge">动态</span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">2026年起非公证继承告知承诺制全面落地</span>
+          <span style="color:#999">›</span>
+        </div>
+        <div class="section-head">
+          <span class="section-title">精选案例</span>
+          <span class="section-more">更多 ›</span>
+        </div>
+        <div class="case-cards">
+          <div class="case-card">
+            <div class="case-card-title">养子女与亲生子女继承权纠纷案</div>
+            <div class="case-card-meta">北京市朝阳区法院 · 2025-06</div>
+            <div class="case-card-tags">
+              <span class="case-mini-tag">养子女</span>
+              <span class="case-mini-tag">继承权</span>
+            </div>
+          </div>
+          <div class="case-card">
+            <div class="case-card-title">打印遗嘱效力认定案</div>
+            <div class="case-card-meta">上海市第一中级法院 · 2024-11</div>
+            <div class="case-card-tags">
+              <span class="case-mini-tag">打印遗嘱</span>
+              <span class="case-mini-tag">遗嘱效力</span>
+            </div>
+          </div>
+        </div>
+        <div class="section-head">
+          <span class="section-title">热门问题</span>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item"><span>遗嘱怎么写才有效？</span><span class="faq-arrow">›</span></div>
+          <div class="faq-item"><span>法定继承的顺序是什么？</span><span class="faq-arrow">›</span></div>
+          <div class="faq-item"><span>继子女有继承权吗？</span><span class="faq-arrow">›</span></div>
+        </div>
+        <div class="share-bar">
+          <span>💡 觉得有用？</span>
+          <span class="share-btn-mock">分享给朋友</span>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab active"><span class="tab-icon">🏠</span>首页</div>
+      <div class="tab"><span class="tab-icon">📖</span>法律库</div>
+      <div class="tab"><span class="tab-icon">📋</span>案例库</div>
+      <div class="tab"><span class="tab-icon">🔧</span>工具箱</div>
+      <div class="tab"><span class="tab-icon">👤</span>我的</div>
+    </div>
+  </div>
+  <div class="screen-desc">新增AI入口、快捷导航、精选案例横滑、法律动态、分享栏</div>
+</div>
+
+<!-- ==================== AI助手 ==================== -->
+<div class="screen-wrap">
+  <div class="screen-label">AI继承法助手</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    <div class="nav-bar nav-bar-dark"><span class="nav-bar-back">‹</span> AI继承法助手</div>
+    <div class="ai-disclaimer">本功能由深度合成技术驱动，输出内容仅供参考，不构成法律意见</div>
+    <div class="content-nobar" style="display:flex;flex-direction:column">
+      <div class="chat-area">
+        <div class="chat-welcome">
+          <h3>遗产通 · AI 继承法助手</h3>
+          <p>可询问遗嘱、法定继承、遗产范围等问题。回复中的法条可点击查看。<br>AI回复仅供参考，复杂问题建议咨询律师。</p>
+          <div class="suggest-chips">
+            <span class="suggest-chip">什么是法定继承？</span>
+            <span class="suggest-chip">遗嘱怎么写才有效？</span>
+            <span class="suggest-chip">继子女有继承权吗？</span>
+          </div>
+        </div>
+        <div class="msg-user"><div class="bubble">遗嘱怎么写才有效？</div></div>
+        <div class="msg-ai">
+          <div class="bubble">
+            根据《民法典》继承编，有效遗嘱需要满足以下条件：<br><br>
+            1. <b>自书遗嘱</b>（<span class="law-ref-span">第1134条</span>）：由遗嘱人亲笔书写，签名，注明年月日。<br>
+            2. <b>代书遗嘱</b>（<span class="law-ref-span">第1135条</span>）：应有两个以上见证人在场见证。<br>
+            3. <b>打印遗嘱</b>（<span class="law-ref-span">第1136条</span>）：应有两个以上见证人在场见证，遗嘱人和见证人应在每一页签名、注明日期。<br><br>
+            ⚠️ 无民事行为能力人或限制民事行为能力人所立的遗嘱无效。
+          </div>
+          <div class="ai-chips">
+            <span class="ai-chips-label">相关内容</span>
+            <div class="ai-chips-row">
+              <span class="ai-chip-law">法条 1134</span>
+              <span class="ai-chip-law">法条 1135</span>
+              <span class="ai-chip-law">法条 1136</span>
+              <span class="ai-chip-case">打印遗嘱效力认定案</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="input-bar">
+        <div class="input-mock">输入继承法相关问题…</div>
+        <div class="send-mock">发送</div>
+      </div>
+    </div>
+  </div>
+  <div class="screen-desc">深度合成标识、建议问题、法条可点击、关联案例推荐</div>
+</div>
+
+<!-- ==================== 法律咨询 (律师) ==================== -->
+<div class="screen-wrap">
+  <div class="screen-label">法律咨询 · 律师合作</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    <div class="nav-bar nav-bar-dark"><span class="nav-bar-back">‹</span> 法律咨询</div>
+    <div class="content-nobar" style="padding:0;background:#f7f7f5">
+      <div style="margin:16px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+        <div style="font-size:16px;font-weight:700;color:#2B5F8A;margin-bottom:8px">法律咨询服务</div>
+        <div style="font-size:13px;color:#666;line-height:1.65">遗产通与专业律师合作，为您提供继承法领域的专业咨询服务。AI助手可解答常见问题，复杂情况建议咨询律师。</div>
+      </div>
+      <div class="lawyer-card">
+        <div class="lawyer-header">
+          <div class="lawyer-avatar">律</div>
+          <div class="lawyer-info">
+            <div class="lawyer-name">合作律师</div>
+            <div class="lawyer-field">专注继承法、婚姻家事</div>
+          </div>
+          <span class="lawyer-badge">已认证</span>
+        </div>
+        <div class="services">
+          <div class="service"><span class="service-icon">💬</span><span class="service-text">遗产继承咨询</span></div>
+          <div class="service"><span class="service-icon">📝</span><span class="service-text">遗嘱起草审核</span></div>
+          <div class="service"><span class="service-icon">⚖️</span><span class="service-text">继承纠纷处理</span></div>
+        </div>
+        <div class="wx-row">
+          <span class="wx-label">律师微信</span>
+          <span class="wx-id">LawServicePro</span>
+          <span class="wx-copy">复制</span>
+        </div>
+        <div class="qr-wrap">
+          <div class="qr-placeholder">📱 微信二维码</div>
+          <span class="qr-hint">长按识别或截图保存二维码</span>
+        </div>
+      </div>
+      <div class="hotline-card">
+        <div class="contact-label">公共法律服务热线 <span class="contact-tag tag-free">公益免费</span></div>
+        <span class="contact-val">12348</span>
+        <span class="contact-sub">全国公共法律服务热线，24小时服务</span>
+        <div class="btn-outline">拨打 12348</div>
+      </div>
+      <div class="email-card">
+        <div class="contact-label">意见反馈邮箱 <span class="contact-tag tag-fix">内容纠错</span></div>
+        <span class="contact-val" style="font-size:16px">775035298@qq.com</span>
+        <div class="btn-primary" style="margin-top:12px">复制邮箱</div>
+      </div>
+      <div class="ai-tip">🤖 简单问题可先试试 AI法律助手 <span style="margin-left:auto">›</span></div>
+      <div class="disclaimer-card">免责声明：本平台仅提供信息展示与技术支撑，不直接提供诉讼代理或法律委托服务。具体法律事务请以执业律师的专业意见为准。</div>
+    </div>
+  </div>
+  <div class="screen-desc">律师资质展示、微信二维码、公共热线、AI引导、免责声明</div>
+</div>
+
+<!-- ==================== 工具箱 ==================== -->
+<div class="screen-wrap">
+  <div class="screen-label">工具箱 · Tools</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    <div class="content">
+      <div style="padding-top:10px"></div>
+      <div class="tools-header-ai">
+        <span class="ai-icon">🤖</span>
+        <div class="ai-text">
+          <div class="ai-title">AI继承法助手</div>
+          <div class="ai-sub">继承法问题，智能为您解答</div>
+        </div>
+        <span class="ai-arrow">›</span>
+      </div>
+      <div class="glossary-entry">
+        <span class="g-icon">📖</span>
+        <div class="g-text">
+          <div class="g-title">法律词典</div>
+          <div class="g-sub">125个法律术语通俗解释</div>
+        </div>
+        <span class="g-arrow">›</span>
+      </div>
+      <div class="tools-section-head">
+        <span class="tools-section-title">实用工具</span>
+        <span class="tools-section-hint">继承规划 · 流程指引</span>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <span class="tool-card-icon">🧮</span>
+          <span class="tool-card-title">继承关系计算器</span>
+          <span class="tool-card-desc">快速判断继承人资格及继承份额</span>
+        </div>
+        <div class="tool-card">
+          <span class="tool-card-icon">📋</span>
+          <span class="tool-card-title">遗嘱要素参考</span>
+          <span class="tool-card-desc">各类遗嘱的必备要素与注意事项</span>
+        </div>
+        <div class="tool-card">
+          <span class="tool-card-icon">📝</span>
+          <span class="tool-card-title">遗产清单模板</span>
+          <span class="tool-card-desc">帮助整理不同类型遗产资产</span>
+        </div>
+        <div class="tool-card">
+          <span class="tool-card-icon">📑</span>
+          <span class="tool-card-title">继承办理流程</span>
+          <span class="tool-card-desc">从遗产确认到分配的完整步骤</span>
+        </div>
+        <div class="tool-card">
+          <span class="tool-card-icon">⏰</span>
+          <span class="tool-card-title">诉讼时效指南</span>
+          <span class="tool-card-desc">继承权纠纷的起诉期限说明</span>
+        </div>
+        <div class="tool-card">
+          <span class="tool-card-icon">🏠</span>
+          <span class="tool-card-title">房产继承指南</span>
+          <span class="tool-card-desc">不动产继承的特殊规定与操作</span>
+        </div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab"><span class="tab-icon">🏠</span>首页</div>
+      <div class="tab"><span class="tab-icon">📖</span>法律库</div>
+      <div class="tab"><span class="tab-icon">📋</span>案例库</div>
+      <div class="tab active"><span class="tab-icon">🔧</span>工具箱</div>
+      <div class="tab"><span class="tab-icon">👤</span>我的</div>
+    </div>
+  </div>
+  <div class="screen-desc">AI入口置顶、法律词典突出、工具卡片式布局</div>
+</div>
+
+<!-- ==================== 我的 ==================== -->
+<div class="screen-wrap">
+  <div class="screen-label">我的 · Mine</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">📶 🔋</span>
+    </div>
+    <div class="content">
+      <div style="padding-top:10px"></div>
+      <div class="user-card">
+        <div class="avatar">遗</div>
+        <div class="user-info">
+          <div class="user-name">遗产通用户</div>
+          <div class="user-desc">本地学习 · 无需登录</div>
+        </div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-item"><span class="menu-item-icon">⭐</span><span class="menu-item-title">我的收藏</span><span class="menu-item-arrow">›</span></div>
+        <div class="menu-item"><span class="menu-item-icon">📝</span><span class="menu-item-title">我的笔记</span><span class="menu-item-arrow">›</span></div>
+        <div class="menu-item"><span class="menu-item-icon">📖</span><span class="menu-item-title">浏览历史</span><span class="menu-item-arrow">›</span></div>
+      </div>
+      <div class="menu-card">
+        <div class="menu-item"><span class="menu-item-icon">🤖</span><span class="menu-item-title">AI法律助手</span><span class="menu-badge-ai">智能问答</span><span class="menu-item-arrow">›</span></div>
+        <div class="menu-item"><span class="menu-item-icon">👨‍⚖️</span><span class="menu-item-title">联系律师</span><span class="menu-item-arrow">›</span></div>
+      </div>
+      <div class="about-card">
+        <span class="about-title">关于「遗产通」</span>
+        <span class="about-ver">版本 2.0.0</span>
+        <span class="about-body">深圳市迪莹互联网技术有限公司 出品</span>
+        <span class="about-stats">390+全国法院真实判例 · 45条民法典继承编 · 125个法律术语</span>
+        <div class="about-divider"></div>
+        <div class="sources">
+          <span class="sources-title">数据来源</span>
+          <span class="source-line">· 《中华人民共和国民法典》继承编及司法解释</span>
+          <span class="source-line">· 中国裁判文书网公开裁判文书（节选整理）</span>
+          <span class="source-line">· AI功能由深度合成技术提供，输出仅供参考</span>
+        </div>
+      </div>
+      <div class="privacy-link">《隐私政策》</div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab"><span class="tab-icon">🏠</span>首页</div>
+      <div class="tab"><span class="tab-icon">📖</span>法律库</div>
+      <div class="tab"><span class="tab-icon">📋</span>案例库</div>
+      <div class="tab"><span class="tab-icon">🔧</span>工具箱</div>
+      <div class="tab active"><span class="tab-icon">👤</span>我的</div>
+    </div>
+  </div>
+  <div class="screen-desc">AI和律师入口独立分组、企业主体信息、深度合成标注</div>
+</div>
+
+</div>
+
+<!-- ===== Design Legend ===== -->
+<div class="legend">
+  <h2>设计规范说明</h2>
+  <div class="legend-grid">
+    <div class="legend-item">
+      <h3>🎨 色彩体系</h3>
+      <p>
+        <span class="legend-color" style="background:#2B5F8A"></span> 主色 #2B5F8A（深蓝 · 权威）<br>
+        <span class="legend-color" style="background:#667EEA"></span> AI色 #667EEA → #764BA2（渐变 · 科技感）<br>
+        <span class="legend-color" style="background:#B33A3A"></span> 案例色 #B33A3A（法槌红 · 法律）<br>
+        <span class="legend-color" style="background:#C69C6D"></span> 辅色 #C69C6D（古铜金 · 典雅）<br>
+        <span class="legend-color" style="background:#F7F7F5"></span> 背景 #F7F7F5（暖灰 · 舒适阅读）
+      </p>
+    </div>
+    <div class="legend-item">
+      <h3>📐 布局与交互</h3>
+      <p>
+        · 圆角: 12-16px (卡片) / 50% (图标背景)<br>
+        · 阴影: 0 2px 12px rgba(0,0,0,0.06) (标准卡片)<br>
+        · 字体: PingFang SC / Noto Sans SC<br>
+        · 间距: 16px 标准内边距，8-12px 元素间距<br>
+        · 安全区: 底部 env(safe-area-inset-bottom) 适配
+      </p>
+    </div>
+    <div class="legend-item">
+      <h3>🤖 AI合规标识</h3>
+      <p>
+        · AI页顶部固定黄色声明条<br>
+        · 声明文字: "由深度合成技术驱动，输出仅供参考"<br>
+        · "我的"和隐私政策中标注 AI 数据来源<br>
+        · 欢迎语提示 "复杂问题建议咨询律师"
+      </p>
+    </div>
+    <div class="legend-item">
+      <h3>📢 广告预埋位</h3>
+      <p>
+        · 首页底部（share-bar下方，远期 Banner）<br>
+        · 案例详情底部（远期 Banner）<br>
+        · 页面间插屏（远期，每5次浏览触发）<br>
+        · 均通过 remote_config.json 服务端控制
+      </p>
+    </div>
+    <div class="legend-item">
+      <h3>🔗 分享/SEO</h3>
+      <p>
+        · 所有页面支持 onShareAppMessage<br>
+        · sitemap.json 精细化页面索引配置<br>
+        · 首页、法条详情、案例详情优先索引<br>
+        · 分享标题包含关键词优化
+      </p>
+    </div>
+    <div class="legend-item">
+      <h3>🏢 企业主体标识</h3>
+      <p>
+        · 隐私弹窗: "深圳市迪莹互联网技术有限公司"<br>
+        · "我的"关于页: 出品方为企业名称<br>
+        · 版本号: V2.0.0<br>
+        · 律师标识: "合作律师 · 已认证"
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  遗产通 V2.0 · 企业版 UI 设计稿 · 深圳市迪莹互联网技术有限公司 · 2026
+</footer>
+
+</body>
+</html>

@@ -1,5 +1,14 @@
 {
   "rules": [
-    { "action": "allow", "page": "*" }
+    { "action": "allow", "page": "pages/index/index" },
+    { "action": "allow", "page": "pages/laws/laws" },
+    { "action": "allow", "page": "pages/cases/cases" },
+    { "action": "allow", "page": "pages/tools/tools" },
+    { "action": "allow", "page": "subpkg/law-detail/law-detail" },
+    { "action": "allow", "page": "subpkg/case-detail/case-detail" },
+    { "action": "allow", "page": "subpkg/topic-detail/topic-detail" },
+    { "action": "allow", "page": "subpkg/glossary/glossary" },
+    { "action": "allow", "page": "subpkg/ai/ai" },
+    { "action": "disallow", "page": "pages/mine/mine" }
   ]
 }

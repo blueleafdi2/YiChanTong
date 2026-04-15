@@ -20,8 +20,141 @@
   line-height: 1.65;
 }
 
-.contact-card { margin: 0 24rpx 24rpx; }
+/* Lawyer Card */
+.lawyer-card {
+  margin: 0 24rpx 24rpx;
+}
 
+.lawyer-head {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.lawyer-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2B5F8A, #3A7CB8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lawyer-avatar-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.lawyer-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.lawyer-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.lawyer-field {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.lawyer-tag {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  background: rgba(43, 95, 138, 0.1);
+  color: #2B5F8A;
+  font-weight: 500;
+}
+
+.lawyer-services {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.service-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx 8rpx;
+  background: #F7F9FC;
+  border-radius: 12rpx;
+}
+
+.service-icon {
+  font-size: 32rpx;
+}
+
+.service-text {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.lawyer-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 20rpx;
+  background: #F7F9FC;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.lawyer-wx-label {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.lawyer-wx-id {
+  flex: 1;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.copy-btn-small {
+  padding: 8rpx 20rpx;
+  background: #2B5F8A;
+  border-radius: 8rpx;
+}
+
+.copy-btn-small text {
+  font-size: 24rpx;
+  color: #ffffff;
+}
+
+.wx-qr-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.wx-qr {
+  width: 400rpx;
+  border-radius: 12rpx;
+}
+
+.wx-qr-hint {
+  font-size: 22rpx;
+  color: var(--text-hint);
+}
+
+/* Contact Card */
+.contact-card { margin: 0 24rpx 24rpx; }
 .contact-head { margin-bottom: 12rpx; }
 
 .contact-label {
@@ -69,14 +202,46 @@
 }
 
 .full-btn::after { border: none; }
-
 .call-btn { margin-top: 8rpx; }
 
-.footer-note {
-  padding: 8rpx 24rpx 0;
-  text-align: center;
-  color: var(--text-hint);
-  line-height: 1.5;
+/* AI Tip */
+.ai-tip-card {
+  margin: 0 24rpx 24rpx;
+  padding: 24rpx;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  border: 1rpx solid rgba(102, 126, 234, 0.15);
+}
+
+.ai-tip-icon {
+  font-size: 36rpx;
+}
+
+.ai-tip-text {
+  flex: 1;
+  font-size: 26rpx;
+  color: #667EEA;
+  font-weight: 500;
+}
+
+.ai-tip-arrow {
+  font-size: 32rpx;
+  color: #667EEA;
+}
+
+/* Disclaimer */
+.disclaimer {
+  margin: 0 24rpx 24rpx;
+  background: #FFF8E1;
+}
+
+.disclaimer-text {
+  font-size: 22rpx;
+  color: #856404;
+  line-height: 1.65;
 }
 
 .px { padding-left: 24rpx; padding-right: 24rpx; }

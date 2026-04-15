@@ -1,46 +1,29 @@
 {
-  "announcement": {
-    "enabled": false,
-    "title": "",
-    "message": "",
-    "url": ""
+  "version": "2.0.0",
+  "minVersion": "1.0.0",
+  "forceUpdate": false,
+  "updateMessage": "",
+  "adEnabled": false,
+  "adConfig": {
+    "bannerAdUnitId": "",
+    "interstitialAdUnitId": "",
+    "rewardedAdUnitId": "",
+    "nativeAdUnitId": "",
+    "bannerPages": ["pages/index/index", "subpkg/case-detail/case-detail"],
+    "interstitialFrequency": 5,
+    "minSessionMinutes": 3
   },
-  "ad_config": {
-    "enabled": false,
-    "provider": "none",
-    "banner": {
-      "enabled": false,
-      "unit_id": ""
-    },
-    "interstitial": {
-      "enabled": false,
-      "unit_id": "",
-      "frequency_minutes": 30
-    },
-    "rewarded": {
-      "enabled": false,
-      "unit_id": ""
-    },
-    "native": {
-      "enabled": false,
-      "unit_id": ""
-    },
-    "new_user_ad_free_days": 3
+  "announcement": "",
+  "announcementType": "info",
+  "features": {
+    "ai": true,
+    "lawyer": true,
+    "share": true,
+    "export": true
   },
   "contact": {
-    "wechat_id": "LawServicePro",
+    "wechatId": "LawServicePro",
+    "email": "775035298@qq.com",
     "phone": "12348"
-  },
-  "feature_flags": {
-    "ai_enabled": true,
-    "glossary_enabled": true,
-    "tools_enabled": true
-  },
-  "min_version": 1,
-  "latest_version": 13,
-  "update_url": "",
-  "custom_pages": {
-    "about_url": "",
-    "faq_url": ""
   }
 }

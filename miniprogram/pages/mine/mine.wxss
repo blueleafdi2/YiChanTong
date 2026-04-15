@@ -84,6 +84,16 @@
   color: #1A1A1A;
 }
 
+.menu-badge {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  background: linear-gradient(135deg, #667EEA, #764BA2);
+  color: #ffffff;
+  border-radius: 16rpx;
+  margin-left: auto;
+  margin-right: 12rpx;
+}
+
 .menu-arrow {
   font-size: 36rpx;
   color: #CCCCCC;

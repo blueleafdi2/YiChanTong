@@ -157,8 +157,19 @@ Page({
       return
     }
     if (type === 'tool') {
-      wx.navigateTo({ url: `/subpkg/tool-detail/tool-detail?id=${enc}` })
+      wx.navigateTo({ url: '/subpkg/tool-detail/tool-detail?id=' + enc })
     }
   },
 
+  onEmptyAiTap: function () {
+    var q = (this.data.query || '').trim()
+    wx.navigateTo({ url: '/subpkg/ai/ai' })
+  },
+
+  onShareAppMessage: function () {
+    return {
+      title: '遗产通 — 继承法知识搜索',
+      path: '/pages/search/search'
+    }
+  }
 })

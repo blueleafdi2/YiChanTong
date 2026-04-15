@@ -5,6 +5,18 @@
   background: var(--bg);
 }
 
+.ai-disclaimer {
+  padding: 12rpx 24rpx;
+  background: #FFF8E1;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.ai-disclaimer-text {
+  font-size: 22rpx;
+  color: #856404;
+}
+
 .chat-scroll {
   flex: 1;
   height: 0;
@@ -30,6 +42,28 @@
   font-size: 26rpx;
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+.hint-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 20rpx;
+}
+
+.hint-chip {
+  padding: 14rpx 24rpx;
+  background: rgba(43, 95, 138, 0.08);
+  border-radius: 32rpx;
+  font-size: 24rpx;
+  color: var(--primary);
+  border: 1rpx solid rgba(43, 95, 138, 0.15);
+}
+
+.law-ref {
+  color: #2B5F8A;
+  text-decoration: underline;
+  font-weight: 500;
 }
 
 .msg-row {

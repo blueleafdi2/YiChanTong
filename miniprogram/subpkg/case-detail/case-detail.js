@@ -94,5 +94,13 @@ Page({
         }
       }
     })
+  },
+
+  onShareAppMessage: function () {
+    var item = this.data.item
+    return {
+      title: item ? item.title : '遗产通 — 案例详情',
+      path: '/subpkg/case-detail/case-detail?id=' + (item ? item.id : '')
+    }
   }
 })

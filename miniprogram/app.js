@@ -1,10 +1,25 @@
-const analytics = require('./utils/analytics')
+var analytics = require('./utils/analytics')
+var remoteConfig = require('./utils/remote-config')
+var adManager = require('./utils/ad-manager')
 
 App({
-  onLaunch() {
+  onLaunch: function () {
     analytics.log('app_launch')
     this.loadData()
     this.checkPrivacyConsent()
+    remoteConfig.load(function (cfg) {
+      if (cfg && cfg.adConfig) {
+        adManager.updateConfig({
+          enabled: cfg.adEnabled || false,
+          bannerAdUnitId: (cfg.adConfig || {}).bannerAdUnitId || '',
+          interstitialAdUnitId: (cfg.adConfig || {}).interstitialAdUnitId || '',
+          rewardedAdUnitId: (cfg.adConfig || {}).rewardedAdUnitId || '',
+          bannerPages: (cfg.adConfig || {}).bannerPages || [],
+          interstitialFrequency: (cfg.adConfig || {}).interstitialFrequency || 5,
+          minSessionMinutes: (cfg.adConfig || {}).minSessionMinutes || 3
+        })
+      }
+    })
   },
 
   checkPrivacyConsent() {
@@ -14,10 +29,12 @@ App({
     } catch (e) {}
     wx.showModal({
       title: '用户协议与隐私政策',
-      content: '欢迎使用「遗产通」！本小程序为法律知识学习工具，不构成法律意见。\n\n'
+      content: '欢迎使用「遗产通」（深圳市迪莹互联网技术有限公司）！\n\n'
         + '• 收藏、笔记、浏览历史仅存储在您的设备本地\n'
-        + '• 请勿在小程序中输入真实姓名、身份证号等敏感个人信息\n'
-        + '• 我们不会向第三方出售您的个人信息\n\n'
+        + '• AI法律助手基于深度合成技术，输出仅供参考\n'
+        + '• 请勿输入真实姓名、身份证号等敏感个人信息\n'
+        + '• 我们不会向第三方出售您的个人信息\n'
+        + '• 本小程序不提供法律代理服务\n\n'
         + '继续使用即表示您同意以上条款。',
       confirmText: '同意',
       cancelText: '查看详情',
